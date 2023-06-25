@@ -1,0 +1,160 @@
+{
+  "main": {
+    "id": "5f3d52d7173dba97",
+    "type": "split",
+    "children": [
+      {
+        "id": "edd20786e2c75363",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "cfdc59b3bf91c67a",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "dot_configs/Configs for tools.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "cb3337a55691e87a",
+    "type": "split",
+    "children": [
+      {
+        "id": "bd4cba9a458a5c5d",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "8d6ffaa7494d49ae",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "c82b252cab12459a",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "e8588b7ca96e617b",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "ad64cb92bae5078a",
+    "type": "split",
+    "children": [
+      {
+        "id": "53c570c0c79a2ff8",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "a96510c0f1ce38f9",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "dot_configs/Configs for tools.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "913d4626f99cd243",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "dot_configs/Configs for tools.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "42071f0173b4d39a",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "7d75d4b8133338b9",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "dot_configs/Configs for tools.md"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "templater-obsidian:Templater": false
+    }
+  },
+  "active": "cfdc59b3bf91c67a",
+  "lastOpenFiles": [
+    "dot_tools/Tools.md",
+    "dot_configs/Configs for tools.md",
+    "Brewfile",
+    "dot_configs",
+    "dot_tools",
+    "nvim/Wizen",
+    "nvim"
+  ]
+}

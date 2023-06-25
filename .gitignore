@@ -39,3 +39,7 @@ luac.out
 *.x86_64
 *.hex
 
+.obsidian/app.json
+.obsidian/appearance.json
+.obsidian/hotkeys.json
+.obsidian/workspace
