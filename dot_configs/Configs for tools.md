@@ -1,3 +1,4 @@
+For each tool that does not use the default settings, here will be a dedicated header with the configuration file.
 ## ZSHRC
 ```zsh fold file:.zshrc !tangle:~/.zshrc
 # Path to your oh-my-zsh installation.
@@ -82,13 +83,8 @@ alias diff='diff --color=auto'
 
 # Changing "ls" to "exa"
 alias ls='exa -al --icons --color=always --group-directories-first' # my preferred listing
-# alias ls='lsd -Fla --group-dirs first' # my preferred listing1
-alias lsd='lsd -Fl --group-dirs first' # my preferred listing1
 alias la='exa -a --color=always --group-directories-first'  # all files and dirs
 alias ll='exa -l --color=always --group-directories-first'  # long format
-alias lt='lsd --tree' # tree listing
-alias ltd='lsd --tree -d' # tree listing
-alias hg='history | grep --color=auto '
 alias kgn='kubectl get namespaces'
 
 # Git aliases
