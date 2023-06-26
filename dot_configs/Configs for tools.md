@@ -741,3 +741,633 @@ ui {
 }
 
 ```
+
+## Wezterm
+[wezterm](https://wezfurlong.org/wezterm/) A GPU-accelerated cross-platform terminal emulator and multiplexer, written in Rust.
+For me the selling point is the configuration file that in Lua format, which is handy since Neovim is in Lua mostly nowadays.
+Configuration is split into multiple files for easier maintenance, files are the following:
+### Bar setup
+```lua file:bar.lua  !tangle:~/.config/wezterm/bar.lua
+local wezterm = require("wezterm")
+
+local M = {}
+
+M.config = {
+  dividers = "slant_right",
+  indicator = {
+    leader = {
+      enabled = true,
+      off = " ",
+      on = " ",
+    },
+    mode = {
+      enabled = true,
+      names = {
+        resize_mode = "RESIZE",
+        copy_mode = "VISUAL",
+        search_mode = "SEARCH",
+      },
+    },
+  },
+  tabs = {
+    numerals = "arabic",
+    pane_count = "superscript",
+    brackets = {
+      active = { "", ":" },
+      inactive = { "", ":" },
+    },
+  },
+  clock = {
+    enabled = true,
+    format = "%H:%M",
+  },
+}
+
+local function tableMerge(t1, t2)
+  for k, v in pairs(t2) do
+    if type(v) == "table" then
+      if type(t1[k] or false) == "table" then
+        tableMerge(t1[k] or {}, t2[k] or {})
+      else
+        t1[k] = v
+      end
+    else
+      t1[k] = v
+    end
+  end
+  return t1
+end
+
+local C = {}
+
+M.setup = function(config)
+  M.config = tableMerge(M.config, config)
+  local dividers = {
+    slant_right = {
+      left = utf8.char(0xe0be),
+      right = utf8.char(0xe0bc),
+    },
+    slant_left = {
+      left = utf8.char(0xe0ba),
+      right = utf8.char(0xe0b8),
+    },
+    arrows = {
+      left = utf8.char(0xe0b2),
+      right = utf8.char(0xe0b0),
+    },
+    rounded = {
+      left = utf8.char(0xe0b6),
+      right = utf8.char(0xe0b4),
+    },
+  }
+
+  C.div = {
+    l = "",
+    r = "",
+  }
+  if M.config.dividers then
+    C.div.l = dividers[M.config.dividers].left
+    C.div.r = dividers[M.config.dividers].right
+  end
+
+  C.leader = {
+    enabled = M.config.indicator.leader.enabled or true,
+    off = M.config.indicator.leader.off,
+    on = M.config.indicator.leader.on,
+  }
+
+  C.mode = {
+    enabled = M.config.indicator.mode.enabled,
+    names = M.config.indicator.mode.names,
+  }
+
+  C.tabs = {
+    numerals = M.config.tabs.numerals,
+    pane_count_style = M.config.tabs.pane_count,
+    brackets = {
+      active = M.config.tabs.brackets.active,
+      inactive = M.config.tabs.brackets.inactive,
+    },
+  }
+
+  C.clock = {
+    enabled = M.config.clock.enabled,
+    format = M.config.clock.format,
+  }
+
+  C.p = (M.config.dividers == "rounded") and "" or " "
+
+  wezterm.log_info(C)
+end
+
+-- superscript/subscript
+local function numberStyle(number, script)
+  local scripts = {
+    superscript = {
+      "⁰",
+      "¹",
+      "²",
+      "³",
+      "⁴",
+      "⁵",
+      "⁶",
+      "⁷",
+      "⁸",
+      "⁹",
+    },
+    subscript = {
+      "₀",
+      "₁",
+      "₂",
+      "₃",
+      "₄",
+      "₅",
+      "₆",
+      "₇",
+      "₈",
+      "₉",
+    },
+  }
+  local numbers = scripts[script]
+  local number_string = tostring(number)
+  local result = ""
+  for i = 1, #number_string do
+    local char = number_string:sub(i, i)
+    local num = tonumber(char)
+    if num then
+      result = result .. numbers[num + 1]
+    else
+      result = result .. char
+    end
+  end
+  return result
+end
+
+local roman_numerals = {
+  "Ⅰ",
+  "Ⅱ",
+  "Ⅲ",
+  "Ⅳ",
+  "Ⅴ",
+  "Ⅵ",
+  "Ⅶ",
+  "Ⅷ",
+  "Ⅸ",
+  "Ⅹ",
+  "Ⅺ",
+  "Ⅻ",
+}
+
+-- custom tab bar
+wezterm.on(
+  "format-tab-title",
+  function(tab, tabs, panes, config, hover, max_width)
+    local colours = config.resolved_palette.tab_bar
+
+    local active_tab_index = 0
+    for _, t in ipairs(tabs) do
+      if t.is_active == true then
+        active_tab_index = t.tab_index
+      end
+    end
+
+    local rainbow = {
+      config.resolved_palette.ansi[2],
+      config.resolved_palette.indexed[16],
+      config.resolved_palette.ansi[4],
+      config.resolved_palette.ansi[3],
+      config.resolved_palette.ansi[5],
+      config.resolved_palette.ansi[1],
+    }
+
+    local i = tab.tab_index % 6
+    local active_bg = rainbow[i + 1]
+    local active_fg = colours.background
+    local inactive_bg = colours.inactive_tab.bg_color
+    local inactive_fg = colours.inactive_tab.fg_color
+    local new_tab_bg = colours.new_tab.bg_color
+
+    local s_bg, s_fg, e_bg, e_fg
+
+    -- the last tab
+    if tab.tab_index == #tabs - 1 then
+      if tab.is_active then
+        s_bg = active_bg
+        s_fg = active_fg
+        e_bg = new_tab_bg
+        e_fg = active_bg
+      else
+        s_bg = inactive_bg
+        s_fg = inactive_fg
+        e_bg = new_tab_bg
+        e_fg = inactive_bg
+      end
+    elseif tab.tab_index == active_tab_index - 1 then
+      s_bg = inactive_bg
+      s_fg = inactive_fg
+      e_bg = rainbow[(i + 1) % 6 + 1]
+      e_fg = inactive_bg
+    elseif tab.is_active then
+      s_bg = active_bg
+      s_fg = active_fg
+      e_bg = inactive_bg
+      e_fg = active_bg
+    else
+      s_bg = inactive_bg
+      s_fg = inactive_fg
+      e_bg = inactive_bg
+      e_fg = inactive_bg
+    end
+
+    local pane_count = ""
+    if C.tabs.pane_count_style then
+      local tabi = wezterm.mux.get_tab(tab.tab_id)
+      local muxpanes = tabi:panes()
+      local count = #muxpanes == 1 and "" or tostring(#muxpanes)
+      pane_count = numberStyle(count, C.tabs.pane_count_style)
+    end
+
+    local index_i
+    if C.tabs.numerals == "roman" then
+      index_i = roman_numerals[tab.tab_index + 1]
+    else
+      index_i = tab.tab_index + 1
+    end
+
+    if tab.is_active then
+      index = string.format(
+        "%s%s%s ",
+        C.tabs.brackets.active[1],
+        index_i,
+        C.tabs.brackets.active[2]
+      )
+    else
+      index = string.format(
+        "%s%s%s ",
+        C.tabs.brackets.inactive[1],
+        index_i,
+        C.tabs.brackets.inactive[2]
+      )
+    end
+
+    -- start and end hardcoded numbers are the Powerline + " " padding
+    local fillerwidth = 2 + string.len(index) + string.len(pane_count) + 2
+
+    local tabtitle = tab.active_pane.title
+    local width = config.tab_max_width - fillerwidth - 1
+    if (#tabtitle + fillerwidth) > config.tab_max_width then
+      tabtitle = wezterm.truncate_right(tabtitle, width) .. "…"
+    end
+
+    local title = string.format(" %s%s%s%s", index, tabtitle, pane_count, C.p)
+
+    return {
+      { Background = { Color = s_bg } },
+      { Foreground = { Color = s_fg } },
+      { Text = title },
+      { Background = { Color = e_bg } },
+      { Foreground = { Color = e_fg } },
+      { Text = C.div.r },
+    }
+  end
+)
+
+-- custom status
+wezterm.on("update-status", function(window, pane)
+  local active_kt = window:active_key_table() ~= nil
+  local show = C.leader.enabled or (active_kt and C.mode.enabled)
+  if not show then
+    window:set_left_status("")
+    return
+  end
+
+  local palette = window:effective_config().resolved_palette
+
+  local leader = ""
+  if C.leader.enabled then
+    local leader_text = C.leader.off
+    if window:leader_is_active() then
+      leader_text = C.leader.on
+    end
+    leader = wezterm.format({
+      { Foreground = { Color = palette.background } },
+      { Background = { Color = palette.ansi[5] } },
+      { Text = " " .. leader_text .. C.p },
+    })
+  end
+
+  local mode = ""
+  if C.mode.enabled then
+    local mode_text = ""
+    local active = window:active_key_table()
+    if C.mode.names[active] ~= nil then
+      mode_text = C.mode.names[active] .. ""
+    end
+    mode = wezterm.format({
+      { Foreground = { Color = palette.background } },
+      { Background = { Color = palette.ansi[5] } },
+      { Attribute = { Intensity = "Bold" } },
+      { Text = mode_text },
+      "ResetAttributes",
+    })
+  end
+
+  local first_tab_active = window:mux_window():tabs_with_info()[1].is_active
+  local divider_bg = first_tab_active and palette.ansi[2]
+      or palette.tab_bar.inactive_tab.bg_color
+
+  local divider = wezterm.format({
+    { Background = { Color = divider_bg } },
+    { Foreground = { Color = palette.ansi[5] } },
+    { Text = C.div.r },
+  })
+
+  window:set_left_status(leader .. mode .. divider)
+
+  if C.clock.enabled then
+    local time = wezterm.time.now():format(C.clock.format)
+    window:set_right_status(wezterm.format({
+      { Background = { Color = palette.tab_bar.background } },
+      { Foreground = { Color = palette.ansi[6] } },
+      { Text = time },
+    }))
+  end
+end)
+
+return M
+```
+
+### Fonts setup
+```lua file:fonts.lua  !tangle:~/.config/wezterm/fonts.lua
+local wezterm = require("wezterm")
+
+local F = {}
+local fonts = {
+	operator_mono = {
+		font = {
+			family = "OperatorMono Nerd Font",
+			harfbuzz_features = {
+				"cv06=1",
+				"cv14=1",
+				"cv32=1",
+				"ss04=1",
+				"ss07=1",
+				"ss09=1",
+			},
+		},
+		size = 15,
+		font_rules = {
+			italics = false,
+		},
+	},
+}
+F.get_font = function(name)
+	return {
+		font = wezterm.font_with_fallback({
+			fonts[name].font,
+		}),
+		size = fonts[name].size,
+	}
+end
+
+return F
+```
+### Keybindings setup
+```lua file:keybindings.lua  !tangle:~/.config/wezterm/keybindings.lua
+local wezterm = require("wezterm")
+local act = wezterm.action
+
+local shortcuts = {}
+
+local map = function(key, mods, action)
+  if type(mods) == "string" then
+    table.insert(shortcuts, { key = key, mods = mods, action = action })
+  elseif type(mods) == "table" then
+    for _, mod in pairs(mods) do
+      table.insert(shortcuts, { key = key, mods = mod, action = action })
+    end
+  end
+end
+
+local toggleTabBar = wezterm.action_callback(function(window)
+  wezterm.GLOBAL.enable_tab_bar = not wezterm.GLOBAL.enable_tab_bar
+  window:set_config_overrides({
+    enable_tab_bar = wezterm.GLOBAL.enable_tab_bar,
+  })
+end)
+
+local openUrl = act.QuickSelectArgs({
+  label = "open url",
+  patterns = { "https?://\\S+" },
+  action = wezterm.action_callback(function(window, pane)
+    local url = window:get_selection_text_for_pane(pane)
+    wezterm.open_with(url)
+  end),
+})
+
+-- use 'Backslash' to split horizontally
+map("\\", "LEADER", act.SplitHorizontal({ domain = "CurrentPaneDomain" }))
+-- and 'Minus' to split vertically
+map("-", "LEADER", act.SplitVertical({ domain = "CurrentPaneDomain" }))
+-- map 1-9 to switch to tab 1-9, 0 for the last tab
+for i = 1, 9 do
+  map(tostring(i), { "LEADER", "SUPER" }, act.ActivateTab(i - 1))
+end
+map("0", { "LEADER", "SUPER" }, act.ActivateTab(-1))
+-- 'hjkl' to move between panes
+map("h", { "LEADER", "SUPER" }, act.ActivatePaneDirection("Left"))
+map("j", { "LEADER", "SUPER" }, act.ActivatePaneDirection("Down"))
+map("k", { "LEADER", "SUPER" }, act.ActivatePaneDirection("Up"))
+map("l", { "LEADER", "SUPER" }, act.ActivatePaneDirection("Right"))
+-- resize
+map("h", "LEADER|SHIFT", act.AdjustPaneSize({ "Left", 5 }))
+map("j", "LEADER|SHIFT", act.AdjustPaneSize({ "Down", 5 }))
+map("k", "LEADER|SHIFT", act.AdjustPaneSize({ "Up", 5 }))
+map("l", "LEADER|SHIFT", act.AdjustPaneSize({ "Right", 5 }))
+-- spawn & close
+map("c", "LEADER", act.SpawnTab("CurrentPaneDomain"))
+map("x", "LEADER", act.CloseCurrentPane({ confirm = true }))
+map("t", { "SHIFT|CTRL", "SUPER" }, act.SpawnTab("CurrentPaneDomain"))
+map("w", { "SHIFT|CTRL", "SUPER" }, act.CloseCurrentTab({ confirm = true }))
+map("n", { "SHIFT|CTRL", "SUPER" }, act.SpawnWindow)
+-- zoom states
+map("z", { "LEADER", "SUPER" }, act.TogglePaneZoomState)
+map("Z", { "LEADER", "SUPER" }, toggleTabBar)
+-- copy & paste
+map("v", "LEADER", act.ActivateCopyMode)
+map("c", { "SHIFT|CTRL", "SUPER" }, act.CopyTo("Clipboard"))
+map("v", { "SHIFT|CTRL", "SUPER" }, act.PasteFrom("Clipboard"))
+map("f", { "SHIFT|CTRL", "SUPER" }, act.Search("CurrentSelectionOrEmptyString"))
+-- rotation
+map("e", { "LEADER", "SUPER" }, act.RotatePanes("Clockwise"))
+-- pickers
+map(" ", "LEADER", act.QuickSelect)
+map("o", { "LEADER", "SUPER" }, openUrl)
+map("p", { "LEADER", "SUPER" }, act.PaneSelect({ alphabet = "asdfghjkl;" }))
+map("R", { "LEADER", "SUPER" }, act.ReloadConfiguration)
+map("u", "SHIFT|CTRL", act.CharSelect)
+map("p", { "SHIFT|CTRL", "SHIFT|SUPER" }, act.ActivateCommandPalette)
+-- view
+map("Enter", "ALT", act.ToggleFullScreen)
+map("-", { "CTRL", "SUPER" }, act.DecreaseFontSize)
+map("=", { "CTRL", "SUPER" }, act.IncreaseFontSize)
+map("0", { "CTRL", "SUPER" }, act.ResetFontSize)
+-- switch fonts
+map("f", "LEADER", act.EmitEvent("switch-font"))
+-- debug
+map("l", "SHIFT|CTRL", act.ShowDebugOverlay)
+
+map(
+  "r",
+  { "LEADER", "SUPER" },
+  act.ActivateKeyTable({
+    name = "resize_mode",
+    one_shot = false,
+  })
+)
+
+local key_tables = {
+  resize_mode = {
+    { key = "h", action = act.AdjustPaneSize({ "Left", 1 }) },
+    { key = "j", action = act.AdjustPaneSize({ "Down", 1 }) },
+    { key = "k", action = act.AdjustPaneSize({ "Up", 1 }) },
+    { key = "l", action = act.AdjustPaneSize({ "Right", 1 }) },
+    { key = "LeftArrow", action = act.AdjustPaneSize({ "Left", 1 }) },
+    { key = "DownArrow", action = act.AdjustPaneSize({ "Down", 1 }) },
+    { key = "UpArrow", action = act.AdjustPaneSize({ "Up", 1 }) },
+    { key = "RightArrow", action = act.AdjustPaneSize({ "Right", 1 }) },
+  },
+}
+
+-- add a common escape sequence to all key tables
+for k, _ in pairs(key_tables) do
+  table.insert(key_tables[k], { key = "Escape", action = "PopKeyTable" })
+  table.insert(key_tables[k], { key = "Enter", action = "PopKeyTable" })
+  table.insert(
+    key_tables[k],
+    { key = "c", mods = "CTRL", action = "PopKeyTable" }
+  )
+end
+
+return {
+  leader = { key = "a", mods = "CTRL", timeout_milliseconds = 5000 },
+  keys = shortcuts,
+  disable_default_key_bindings = true,
+  key_tables = key_tables,
+}
+```
+
+### Theme setup
+```lua file:theme.lua  !tangle:~/.config/wezterm/theme.lua
+local wezterm = require("wezterm")
+
+local F = {}
+
+F.scheme_for_appearance = function(appearance, theme)
+  if appearance:find("Dark") then
+    return theme.dark
+  else
+    return theme.light
+  end
+end
+
+F.custom_colorscheme = function()
+  local americano = wezterm.color.get_builtin_schemes()["Catppuccin Mocha"]
+  americano.background = "#000000"
+  americano.tab_bar.background = "#040404"
+  americano.tab_bar.inactive_tab.bg_color = "#0f0f0f"
+  americano.tab_bar.new_tab.bg_color = "#080808"
+
+  return {
+    ["Catppuccin Americano"] = americano
+  }
+end
+
+return F
+```
+
+### Wezterm Setup
+```lua file:wezterm.lua  !tangle:~/.config/wezterm/wezterm.lua
+local wezterm = require("wezterm")
+local theme = require("theme")
+-- Thanks to winston for a lot of this config :)
+-- Look for more of his setup at https://github.com/nekowinston/dotfiles
+require("bar").setup({
+	dividers = "rounded", -- or "slant_left", "arrows", "rounded", false
+	indicator = {
+		leader = {
+			enabled = true,
+			off = " ",
+			on = " ",
+		},
+		mode = {
+			enabled = true,
+			names = {
+				resize_mode = "RESIZE",
+				copy_mode = "VISUAL",
+				search_mode = "SEARCH",
+			},
+		},
+	},
+	tabs = {
+		numerals = "arabic", -- or "roman"
+		pane_count = "superscript", -- or "subscript", false
+		brackets = {
+			active = { "", ":" },
+			inactive = { "", ":" },
+		},
+	},
+	clock = {
+		-- note that this overrides the whole set_right_status
+		enabled = true,
+		format = "%H:%M", -- use https://wezfurlong.org/wezterm/config/lua/wezterm.time/Time/format.html
+	},
+})
+
+wezterm.GLOBAL = {
+	font = "operator_mono",
+	enable_tar_bar = true,
+}
+local font = require("fonts").get_font(wezterm.GLOBAL.font)
+
+local opts = {
+	font = font.font,
+	font_size = font.size,
+	window_decorations = "RESIZE",
+	window_padding = {
+		left = 10,
+		right = 10,
+		top = 10,
+		bottom = 10,
+	},
+	inactive_pane_hsb = {
+		saturation = 1.0,
+		brightness = 0.6,
+	},
+	color_schemes = theme.custom_colorscheme(),
+	color_scheme = theme.scheme_for_appearance(wezterm.gui.get_appearance(), {
+		-- dark = "Everforest Dark (Gogh)",
+		dark = "Catppuccin Americano",
+		light = "Catppuccin Mocha",
+	}),
+	tab_bar_at_bottom = true,
+	tab_max_width = 22,
+	use_fancy_tab_bar = false,
+	window_background_opacity = 1.00,
+	hide_tab_bar_if_only_one_tab = false,
+	enable_tar_bar = wezterm.GLOBAL.tab_bar_hidden,
+	enable_tab_bar = false,
+	adjust_window_size_when_changing_font_size = false,
+	use_resize_increments = false,
+	audible_bell = "Disabled",
+	clean_exit_codes = { 130 },
+	default_cursor_style = "BlinkingBar",
+	enable_scroll_bar = false,
+	check_for_updates = false,
+}
+for k, v in pairs(require("keybindings")) do
+	opts[k] = v
+end
+
+return opts
+```
