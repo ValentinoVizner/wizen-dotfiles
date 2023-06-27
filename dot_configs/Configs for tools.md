@@ -1251,6 +1251,20 @@ local key_tables = {
     { key = "UpArrow", action = act.AdjustPaneSize({ "Up", 1 }) },
     { key = "RightArrow", action = act.AdjustPaneSize({ "Right", 1 }) },
   },
+  copy_mode = {
+			{ key = "Escape", mods = "NONE", action = wezterm.action { CopyMode = "Close" } },
+			{ key = "h", mods = "NONE", action = wezterm.action { CopyMode = "MoveLeft" } },
+			{ key = "j", mods = "NONE", action = wezterm.action { CopyMode = "MoveDown" } },
+			{ key = "k", mods = "NONE", action = wezterm.action { CopyMode = "MoveUp" } },
+			{ key = "l", mods = "NONE", action = wezterm.action { CopyMode = "MoveRight" } },
+			-- Enter search mode to edit the pattern.
+			-- When the search pattern is an empty string the existing pattern is preserved
+			{ key = "/", mods = "NONE", action = wezterm.action { Search = { CaseSensitiveString = "" } } },
+			-- navigate any search mode results
+			{ key = "n", mods = "NONE", action = wezterm.action { CopyMode = "NextMatch" } },
+			{ key = "N", mods = "SHIFT", action = wezterm.action { CopyMode = "PriorMatch" } },
+. },
+
 }
 
 -- add a common escape sequence to all key tables
