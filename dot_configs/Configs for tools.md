@@ -1,5 +1,19 @@
 For each tool that does not use the default settings, here will be a dedicated header with the configuration file.
 ## ZSHRC
+Zshrc config is used in a combination with [Oh My Zsh](https://ohmyz.sh/), but actually starship is used for the theme. Might look into more lightweight alternative to OMZ.
+Following plugins are used:
+	- zsh-syntax-highlighting 
+	- zsh-autosuggestions
+	- fzf
+	- kubectl
+	- web-search
+	- zoxide
+	- rust
+	- ripgrep
+	- zsh-vi-mode
+	- fd
+	- zsh-bat
+
 ```zsh fold file:.zshrc !tangle:~/.zshrc
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
@@ -287,7 +301,7 @@ keybinds clear-defaults=false {
         bind "Ctrl t" { SwitchToMode "tab"; }
         bind "Ctrl s" { SwitchToMode "scroll"; }
         bind "Ctrl o" { SwitchToMode "session"; }
-        bind "Ctrl h" { SwitchToMode "move"; }
+        bind "Ctrl m" { SwitchToMode "move"; }
         bind "Ctrl b" { SwitchToMode "tmux"; }
         bind "Ctrl q" { Quit; }
         bind "Alt n" { NewPane; }
@@ -309,7 +323,7 @@ keybinds clear-defaults=false {
         bind "Ctrl p" "Enter" "Space" "Esc" { SwitchToMode "normal"; }
         bind "Ctrl s" { SwitchToMode "scroll"; }
         bind "Ctrl o" { SwitchToMode "session"; }
-        bind "Ctrl h" { SwitchToMode "move"; }
+        bind "Ctrl m" { SwitchToMode "move"; }
         bind "Ctrl b" { SwitchToMode "tmux"; }
         bind "Ctrl q" { Quit; }
         bind "h" "Left" { MoveFocus "Left"; }
@@ -341,7 +355,7 @@ keybinds clear-defaults=false {
         bind "Ctrl n" { SwitchToMode "resize"; }
         bind "Ctrl t" "Enter" "Space" "Esc" { SwitchToMode "normal"; }
         bind "Ctrl s" { SwitchToMode "scroll"; }
-        bind "Ctrl h" { SwitchToMode "move"; }
+        bind "Ctrl m" { SwitchToMode "move"; }
         bind "Ctrl b" { SwitchToMode "tmux"; }
         bind "Ctrl o" { SwitchToMode "session"; }
         bind "r" { SwitchToMode "RenameTab"; TabNameInput 0; }
@@ -377,7 +391,7 @@ keybinds clear-defaults=false {
         bind "Ctrl n" "Enter" "Space" "Esc" { SwitchToMode "normal"; }
         bind "Ctrl s" { SwitchToMode "scroll"; }
         bind "Ctrl o" { SwitchToMode "session"; }
-        bind "Ctrl h" { SwitchToMode "move"; }
+        bind "Ctrl m" { SwitchToMode "move"; }
         bind "Ctrl b" { SwitchToMode "tmux"; }
         bind "Ctrl q" { Quit; }
         bind "h" "Left" { Resize "Left"; }
@@ -401,7 +415,7 @@ keybinds clear-defaults=false {
         bind "Ctrl p" { SwitchToMode "pane"; }
         bind "Ctrl t" { SwitchToMode "tab"; }
         bind "Ctrl n" { SwitchToMode "resize"; }
-        bind "Ctrl h" "Enter" "Space" "Esc" { SwitchToMode "normal"; }
+        bind "Ctrl m" "Enter" "Space" "Esc" { SwitchToMode "normal"; }
         bind "Ctrl s" { SwitchToMode "scroll"; }
         bind "Ctrl o" { SwitchToMode "session"; }
         bind "Ctrl q" { Quit; }
@@ -425,7 +439,7 @@ keybinds clear-defaults=false {
         bind "Ctrl t" { SwitchToMode "tab"; }
         bind "Ctrl g" { SwitchToMode "locked"; }
         bind "Ctrl p" { SwitchToMode "pane"; }
-        bind "Ctrl h" { SwitchToMode "move"; }
+        bind "Ctrl m" { SwitchToMode "move"; }
         bind "Ctrl b" { SwitchToMode "tmux"; }
         bind "Ctrl o" { SwitchToMode "session"; }
         bind "Ctrl n" { SwitchToMode "resize"; }
@@ -451,7 +465,7 @@ keybinds clear-defaults=false {
         bind "Ctrl g" { SwitchToMode "locked"; }
         bind "Ctrl n" { SwitchToMode "resize"; }
         bind "Ctrl p" { SwitchToMode "pane"; }
-        bind "Ctrl h" { SwitchToMode "move"; }
+        bind "Ctrl m" { SwitchToMode "move"; }
         bind "Ctrl b" { SwitchToMode "tmux"; }
         bind "Ctrl t" { SwitchToMode "tab"; }
         bind "Ctrl o" "Enter" "Space" "Esc" { SwitchToMode "normal"; }
@@ -472,7 +486,7 @@ keybinds clear-defaults=false {
         bind "Ctrl t" { SwitchToMode "tab"; }
         bind "Ctrl g" { SwitchToMode "locked"; }
         bind "Ctrl p" { SwitchToMode "pane"; }
-        bind "Ctrl h" { SwitchToMode "move"; }
+        bind "Ctrl m" { SwitchToMode "move"; }
         bind "Ctrl b" { SwitchToMode "tmux"; }
         bind "Ctrl o" { SwitchToMode "session"; }
         bind "Ctrl n" { SwitchToMode "resize"; }
@@ -539,7 +553,7 @@ keybinds clear-defaults=false {
         bind "Ctrl g" { SwitchToMode "locked"; }
         bind "Ctrl n" { SwitchToMode "resize"; }
         bind "Ctrl p" { SwitchToMode "pane"; }
-        bind "Ctrl h" { SwitchToMode "move"; }
+        bind "Ctrl m" { SwitchToMode "move"; }
         bind "Ctrl t" { SwitchToMode "tab"; }
         bind "Ctrl o" "Enter" "Space" "Esc" { SwitchToMode "normal"; }
         bind "Ctrl s" { SwitchToMode "scroll"; }
