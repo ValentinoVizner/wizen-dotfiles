@@ -1,5 +1,5 @@
-# config
-## autocmds
+# 📝 config 
+## autocmds 
 Autocommands are a way to tell Vim to run certain commands whenever certain events happen. Let's dive right into an example.
 ```lua fold file:autocmds.lua  !tangle:~/.config/nvim/Wizen/config/autocmds.lua
 -- See `:help vim.highlight.on_yank()`
@@ -342,7 +342,7 @@ return {
 }
 
 ```
-##  keymaps
+##  ⌨️ keymaps
 ```lua fold file:keymaps.lua  !tangle:~/.config/nvim/Wizen/config/keymaps.lua
 local keymap = vim.keymap.set
 
@@ -475,7 +475,7 @@ keymap("n", "<Leader>co", "<cmd>Lspsaga outgoing_calls<CR>")
 -- Floating terminal
 keymap({ "n", "t" }, "<A-d>", "<cmd>Lspsaga term_toggle<CR>")
 ```
-## lazy
+## 💤 lazy
 Here we import all the plugins and lazy load them
 ```lua fold file:lazy.lua  !tangle:~/.config/nvim/Wizen/config/lazy.lua
 --- Install lazy.nvim
@@ -606,8 +606,8 @@ function M.augroup(name)
 end
 return M
 ```
-# plugins
-## colorscheme
+# 🔌 plugins
+## 🎨 colorscheme
 This folder consists of colorscheme initialization files.
 ```lua fold file:init.lua  !tangle:~/.config/nvim/Wizen/plugins/colorscheme/init.lua
 return {
@@ -692,19 +692,1098 @@ return {
 }
 
 ```
+
 ## completion
 Completion folder consists of plugins and snippets that serve as a completion engine for suggestions.
+
 ### snippets 
-```lua fold file:util.lua  !tangle:~/.config/nvim/Wizen/plugins/completion/util.lua
+Snippets folder consists of all the snippets for different programming languages.
+#### lua
+```lua fold file:lua.lua  !tangle:~/.config/nvim/Wizen/plugins/completion/snippets/lua.lua
+local ls = require "luasnip"
+local s = ls.snippet
+local i = ls.insert_node
+local fmt = require("luasnip.extras.fmt").fmt
+local l = require("luasnip.extras").lambda
+
+local snippets = {
+  ls.parser.parse_snippet("lm", "local M = {}\n\nfunction M.setup()\n  $1 \nend\n\nreturn M"),
+  ls.parser.parse_snippet("for", "for ${1:i} = ${2:1}, ${3:n} do\n\t$0\nend"),
+  ls.parser.parse_snippet("fun", "local function ${1:name}($2)\n\t$0\nend"),
+  ls.parser.parse_snippet("while", "while ${1:cond} do\n\t$0\nend"),
+  ls.parser.parse_snippet("mfun", "function M.${1:name}($2)\n\t$0\nend"),
+  ls.parser.parse_snippet("pairs", "for ${1:key}, ${2:value} in pairs($3) do\n\t$0\nend"),
+  ls.parser.parse_snippet("ipairs", "for ${1:i}, ${2:value} in ipairs($3) do\n\t$0\nend"),
+  ls.parser.parse_snippet("if", "if ${1:cond} then\n\t$0\nend"),
+  ls.parser.parse_snippet("ifn", "if not ${1:cond} then\n\t$0\nend"),
+  s(
+    "localreq",
+    fmt('local {} = require("{}")', {
+      l(l._1:match("[^.]*$"):gsub("[^%a]+", "_"), 1),
+      i(1, "module"),
+    })
+  ),
+  s(
+    "preq",
+    fmt('local {1}_ok, {1} = pcall(require, "{}")\nif not {1}_ok then return end', {
+      l(l._1:match("[^.]*$"):gsub("[^%a]+", "_"), 1),
+      i(1, "module"),
+    })
+  ),
+}
+return snippets
+```
+
+#### rust
+```lua fold file:rust.lua  !tangle:~/.config/nvim/Wizen/plugins/completion/snippets/rust.lua
+
 ```
 ## dap
+Dap is debugger adapter protocol, used for programming languages to test the code.
+### init
+```lua fold file:init.lua  !tangle:~/.config/nvim/Wizen/plugins/dap/init.lua
+local M = {
+  {
+    "mfussenegger/nvim-dap",
+    dependencies = {
+      { "rcarriga/nvim-dap-ui" },
+      { "theHamsta/nvim-dap-virtual-text" },
+      { "nvim-telescope/telescope-dap.nvim" },
+      { "jbyuki/one-small-step-for-vimkind" },
+      { "jay-babu/mason-nvim-dap.nvim" },
+      { "LiadOz/nvim-dap-repl-highlights", opts = {} },
+    },
+  -- stylua: ignore
+  keys = {
+    { "<leader>dR", function() require("dap").run_to_cursor() end, desc = "Run to Cursor", },
+    { "<leader>dE", function() require("dapui").eval(vim.fn.input "[Expression] > ") end, desc = "Evaluate Input", },
+    { "<leader>dC", function() require("dap").set_breakpoint(vim.fn.input "[Condition] > ") end, desc = "Conditional Breakpoint", },
+    { "<leader>dU", function() require("dapui").toggle() end, desc = "Toggle UI", },
+    { "<leader>db", function() require("dap").step_back() end, desc = "Step Back", },
+    { "<leader>dc", function() require("dap").continue() end, desc = "Continue", },
+    { "<leader>dd", function() require("dap").disconnect() end, desc = "Disconnect", },
+    { "<leader>de", function() require("dapui").eval() end, mode = {"n", "v"}, desc = "Evaluate", },
+    { "<leader>dg", function() require("dap").session() end, desc = "Get Session", },
+    { "<leader>dh", function() require("dap.ui.widgets").hover() end, desc = "Hover Variables", },
+    { "<leader>dS", function() require("dap.ui.widgets").scopes() end, desc = "Scopes", },
+    { "<leader>di", function() require("dap").step_into() end, desc = "Step Into", },
+    { "<leader>do", function() require("dap").step_over() end, desc = "Step Over", },
+    { "<leader>dl", function() require("dap").run_last() end, desc = "Run Last" },
+    { "<leader>dp", function() require("dap").pause.toggle() end, desc = "Pause", },
+    { "<leader>dq", function() require("dap").close() end, desc = "Quit", },
+    { "<leader>dr", function() require("dap").repl.toggle() end, desc = "Toggle REPL", },
+    { "<leader>ds", function() require("dap").continue() end, desc = "Start", },
+    { "<leader>dt", function() require("dap").toggle_breakpoint() end, desc = "Toggle Breakpoint", },
+    { "<leader>dx", function() require("dap").terminate() end, desc = "Terminate", },
+    { "<leader>du", function() require("dap").step_out() end, desc = "Step Out", },
+  },
+    opts = {},
+    config = function(plugin, opts)
+      local icons = require "config.icons"
+      vim.api.nvim_set_hl(0, "DapStoppedLine", { default = true, link = "Visual" })
 
+      for name, sign in pairs(icons.dap) do
+        sign = type(sign) == "table" and sign or { sign }
+        vim.fn.sign_define("Dap" .. name, { text = sign[1], texthl = sign[2] or "DiagnosticInfo", linehl = sign[3], numhl = sign[3] })
+      end
+
+      require("nvim-dap-virtual-text").setup {
+        commented = true,
+      }
+
+      local dap, dapui = require "dap", require "dapui"
+      dapui.setup {}
+
+      dap.listeners.after.event_initialized["dapui_config"] = function()
+        dapui.open()
+      end
+      dap.listeners.before.event_terminated["dapui_config"] = function()
+        dapui.close()
+      end
+      dap.listeners.before.event_exited["dapui_config"] = function()
+        dapui.close()
+      end
+
+      -- set up debugger
+      for k, _ in pairs(opts.setup) do
+        opts.setup[k](plugin, opts)
+      end
+    end,
+  },
+  --TODO: to configure
+  {
+    "jay-babu/mason-nvim-dap.nvim",
+    dependencies = "mason.nvim",
+    cmd = { "DapInstall", "DapUninstall" },
+    opts = {
+      automatic_setup = true,
+      handlers = {},
+      ensure_installed = {},
+    },
+  },
+}
+
+return M
+
+```
+### lua
+```lua fold file:lua.lua  !tangle:~/.config/nvim/Wizen/plugins/dap/lua.lua
+local M = {}
+
+function M.setup()
+  local dap = require "dap"
+  dap.configurations.lua = {
+    {
+      type = "nlua",
+      request = "attach",
+      name = "Attach to running Neovim instance",
+      host = function()
+        local value = vim.fn.input "Host [127.0.0.1]: "
+        if value ~= "" then
+          return value
+        end
+        return "127.0.0.1"
+      end,
+      port = function()
+        local val = tonumber(vim.fn.input("Port: ", "8086"))
+        assert(val, "Please provide a port number")
+        return val
+      end,
+    },
+  }
+
+  dap.adapters.nlua = function(callback, config)
+    callback { type = "server", host = config.host, port = config.port }
+  end
+end
+
+return M
+
+```
+### python
+```lua fold file:python.lua  !tangle:~/.config/nvim/Wizen/plugins/dap/python.lua
+return {
+  {
+    "nvim-treesitter/nvim-treesitter",
+    opts = function(_, opts)
+      vim.list_extend(opts.ensure_installed, { "python" })
+    end,
+  },
+  {
+    "neovim/nvim-lspconfig",
+    opts = {
+      servers = {
+        pyright = {
+          settings = {
+            python = {
+              analysis = {
+                typeCheckingMode = "off",
+                autoSearchPaths = true,
+                useLibraryCodeForTypes = true,
+                diagnosticMode = "workspace",
+              },
+            },
+          },
+        },
+      },
+      setup = {
+        pyright = function(_, opts)
+          local lsp_utils = require "plugins.lsp.utils"
+          lsp_utils.on_attach(function(client, buffer)
+            -- stylua: ignore
+            if client.name == "pyright" then
+              vim.keymap.set("n", "<leader>tC", function() require("dap-python").test_class() end, { buffer = buffer, desc = "Debug Class" })
+              vim.keymap.set("n", "<leader>tM", function() require("dap-python").test_method() end, { buffer = buffer, desc = "Debug Method" })
+              vim.keymap.set("v", "<leader>tS", function() require("dap-python").debug_selection() end, { buffer = buffer, desc = "Debug Selection" })
+            end
+          end)
+        end,
+      },
+    },
+  },
+  {
+    "mfussenegger/nvim-dap",
+    dependencies = { "mfussenegger/nvim-dap-python" },
+    opts = {
+      setup = {
+        debugpy = function(_, _)
+          require("dap-python").setup("python", {})
+          table.insert(require("dap").configurations.python, {
+            type = "python",
+            request = "attach",
+            connect = {
+              port = 5678,
+              host = "127.0.0.1",
+            },
+            mode = "remote",
+            name = "container attach debug",
+            cwd = vim.fn.getcwd(),
+            pathmappings = {
+              {
+                localroot = function()
+                  return vim.fn.input("local code folder > ", vim.fn.getcwd(), "file")
+                end,
+                remoteroot = function()
+                  return vim.fn.input("container code folder > ", "/", "file")
+                end,
+              },
+            },
+          })
+        end,
+      },
+    },
+  },
+}
+```
 ## dashboard
+Starting dashboard with the shortcuts and logo.
+### init
+```lua fold file:init.lua  !tangle:~/.config/nvim/Wizen/plugins/dashboard/init.lua
+return {
+  "goolord/alpha-nvim",
+  lazy = false,
+  config = function()
+    local dashboard = require "alpha.themes.dashboard"
+    dashboard.section.header.val = require("plugins.dashboard.logo")["random"]
+    dashboard.section.buttons.val = {
+      dashboard.button("f", " " .. " Find file", ":Telescope find_files <CR>"),
+      dashboard.button("n", " " .. " New file", ":ene <BAR> startinsert <CR>"),
+      dashboard.button("r", " " .. " Recent files", ":Telescope oldfiles <CR>"),
+      dashboard.button("g", " " .. " Find text", ":Telescope live_grep <CR>"),
+      dashboard.button("c", " " .. " Config", ":e $MYVIMRC <CR>"),
+      dashboard.button("l", "鈴" .. " Lazy", ":Lazy<CR>"),
+      dashboard.button("q", " " .. " Quit", ":qa<CR>"),
+      dashboard.button("s", "🌘" .. " Restore Session", [[:lua require("persistence").load() <cr>]]),
+    }
+    for _, button in ipairs(dashboard.section.buttons.val) do
+      button.opts.hl = "AlphaButtons"
+      button.opts.hl_shortcut = "AlphaShortcut"
+    end
+    dashboard.section.footer.opts.hl = "Constant"
+    dashboard.section.header.opts.hl = "AlphaHeader"
+    dashboard.section.buttons.opts.hl = "AlphaButtons"
+    dashboard.opts.layout[1].val = 0
+
+    if vim.o.filetype == "lazy" then
+      -- close and re-open Lazy after showing alpha
+      vim.notify("Missing plugins installed!", vim.log.levels.INFO, { title = "lazy.nvim" })
+      vim.cmd.close()
+      require("alpha").setup(dashboard.opts)
+      require("lazy").show()
+    else
+      require("alpha").setup(dashboard.opts)
+    end
+
+    vim.api.nvim_create_autocmd("User", {
+      pattern = "LazyVimStarted",
+      callback = function()
+        local stats = require("lazy").stats()
+        local ms = (math.floor(stats.startuptime * 100 + 0.5) / 100)
+
+        -- local now = os.date "%d-%m-%Y %H:%M:%S"
+        local version = "   v" .. vim.version().major .. "." .. vim.version().minor .. "." .. vim.version().patch
+        local fortune = require "alpha.fortune"
+        local quote = table.concat(fortune(), "\n")
+        local plugins = "⚡Neovim loaded " .. stats.count .. " plugins in " .. ms .. "ms"
+        local footer = "\t" .. version .. "\t" .. plugins .. "\n" .. quote
+        dashboard.section.footer.val = footer
+        pcall(vim.cmd.AlphaRedraw)
+      end,
+    })
+  end,
+}
+```
+
+### logo
+```lua fold file:logo.lua  !tangle:~/.config/nvim/Wizen/plugins/dashboard/logo.lua
+return setmetatable({
+  {
+    [[                      ***********************                          ]],
+    [[                 *********************************                     ]],
+    [[             *******   *     *       *    *    *******                 ]],
+    [[          *******   ***      **     **     ***   *******               ]],
+    [[        ******   *****       *********      *****    *****             ]],
+    [[      ******  ********       *********       ******    *****           ]],
+    [[     ****   **********       *********       *********   *****         ]],
+    [[    ****  **************    ***********     ************   ****        ]],
+    [[   ****  *************************************************  ****       ]],
+    [[  ****  ***************************************************  ****      ]],
+    [[  ****  ****************************************************  ****     ]],
+    [[  ****  ****************************************************  ****     ]],
+    [[   ****  ***************************************************  ****     ]],
+    [[    ****  *******     ****  ***********  ****     *********  ****      ]],
+    [[     ****   *****      *      *******      *      ********  ****       ]],
+    [[      *****   ****             *****             ******   *****        ]],
+    [[        *****   **              ***              **    ******          ]],
+    [[         ******   *              *              *   *******            ]],
+    [[           *******                                *******              ]],
+    [[              ********                         *******                 ]],
+    [[                 *********************************                     ]],
+    [[                      ***********************                          ]],
+  },
+  {
+    "                                   ",
+    "                                   ",
+    "                                   ",
+    "   ⣴⣶⣤⡤⠦⣤⣀⣤⠆     ⣈⣭⣿⣶⣿⣦⣼⣆          ",
+    "    ⠉⠻⢿⣿⠿⣿⣿⣶⣦⠤⠄⡠⢾⣿⣿⡿⠋⠉⠉⠻⣿⣿⡛⣦       ",
+    "          ⠈⢿⣿⣟⠦ ⣾⣿⣿⣷    ⠻⠿⢿⣿⣧⣄     ",
+    "           ⣸⣿⣿⢧ ⢻⠻⣿⣿⣷⣄⣀⠄⠢⣀⡀⠈⠙⠿⠄    ",
+    "          ⢠⣿⣿⣿⠈    ⣻⣿⣿⣿⣿⣿⣿⣿⣛⣳⣤⣀⣀   ",
+    "   ⢠⣧⣶⣥⡤⢄ ⣸⣿⣿⠘  ⢀⣴⣿⣿⡿⠛⣿⣿⣧⠈⢿⠿⠟⠛⠻⠿⠄  ",
+    "  ⣰⣿⣿⠛⠻⣿⣿⡦⢹⣿⣷   ⢊⣿⣿⡏  ⢸⣿⣿⡇ ⢀⣠⣄⣾⠄   ",
+    " ⣠⣿⠿⠛ ⢀⣿⣿⣷⠘⢿⣿⣦⡀ ⢸⢿⣿⣿⣄ ⣸⣿⣿⡇⣪⣿⡿⠿⣿⣷⡄  ",
+    " ⠙⠃   ⣼⣿⡟  ⠈⠻⣿⣿⣦⣌⡇⠻⣿⣿⣷⣿⣿⣿ ⣿⣿⡇ ⠛⠻⢷⣄ ",
+    "      ⢻⣿⣿⣄   ⠈⠻⣿⣿⣿⣷⣿⣿⣿⣿⣿⡟ ⠫⢿⣿⡆     ",
+    "       ⠻⣿⣿⣿⣿⣶⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⡟⢀⣀⣤⣾⡿⠃     ",
+    "                                   ",
+  },
+  {
+    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡰⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠀⠀⠀⠀⢀⢄⠀⠀⡴⠁⠈⡆⠀⢀⡤⡀⠀⠀⠀⠀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠢⣄⠀⠀⡇⠀⡕⠀⢸⠀⢠⠃⠀⢮⠀⠹⠀⠀⣠⢾⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇⣞⠀⢀⠇⠀⡇⠀⡸⠀⠈⣆⠀⡸⠀⢰⠀⠀⡇⣸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢹⠘⢶⣯⣊⣄⡨⠟⡡⠁⠐⢌⠫⢅⣢⣑⣵⠶⠁⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⠀⠀⠀⠀⠀⣼⣀⠀⢀⠒⠒⠂⠉⠀⠀⠀⠀⠁⠐⠒⠂⡀⠀⣸⣄⠀⠀⠀⠀⠀⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⢮⣵⣶⣦⡩⡲⣄⠀⠀⣿⣿⣽⠲⠭⣥⣖⣂⣀⣀⣀⣀⣐⣢⡭⠵⠖⣿⣿⢫⠀⠀⣠⣖⣯⣶⣶⣮⡷⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⢸⡟⢉⣉⠙⣿⣿⣦⠀⣿⣿⣿⣿⣷⣲⠶⠤⠭⣭⡭⠭⠴⠶⣖⣾⣿⣿⡿⢸⢀⣼⣿⡿⠋⣉⠉⢳⠁⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠮⣳⣴⣫⠂⠘⣿⣿⣇⢷⢻⣿⣿⣿⣿⣿⣷⣶⣶⣶⣶⣿⣿⣿⣿⣿⢿⢃⡟⣼⣿⣿⠁⠸⣘⣢⣚⠜⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⠈⢧⢻ ⣿⣿⣟⠻⣿⣿⣿⣿⠛⣩⣿⣿ ⢟⡞⢀⣿⣿⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣒⣒⣦⣄⣿⣿⣿⢀⡬⣟⣯  ⣿⢷⣼⡟⢿⣿⡿⣿⣿  ⡻⣤⡀⣿⣿⣸⡠⢔⣒⡒⢤⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+    "⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⠀⠀⠀⠀⠀⠀⠀⢾⣟⣅⠉⢎⣽⣿⣿⡏⡟⣤⣮⣿⣿  ⡏⣿⠀⠀⣿⢡⣷  ⣿⣟⢎⣷⢻⣿⣿⣾⡟⠉⣽⡇⡇⠀⠀⠀⠀⠀⠀⠀⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀",
+    "⠀⠀⠀⠀⠀⠀⡴⣫⣭⣭⣍⡲⢄⠀⠀⠀⠀⠈⠻⠋⣠⡮⣻⣿⣿⠃⠳⣏⣼⣿⣿⣿⣿⡇⣿⣴⣴⣿⣾⣿⣿⣿⡿⣄⣩⠏⢸⣿⣿⣿⣧⡀⠛⠞⠁⠀⠀⠀⢀⣤⣺⣭⣭⣭⡝⢦⠀⠀⠀⠀⠀⠀",
+    "⠀⠀⠀⠀⠀⢸⢹⡟⠁⠀⠉⢫⡳⣵⣄⠀⠀⢀⠴⢊⣿⣾⣿⣿⣿⠀⠀⠀⠻⣬⣽⣿⣿⣿⣿  ⣿⣿⣿⣿⣯⣵⠏⠀⠀⢸⣿⣿⣿⣿⣿⣗⢤⡀⠀⠀⣠⣿⢟⠟⠉⠀⠈⢻⢸⡆⠀⠀⠀⠀⠀",
+    "⠀⠀⠀⠀⠀⠘⢏⢧⣤⡀⠀⠀⣇⢻⣿⣆⢔⢕⣵⠟⣏⣿⣿⣿⠋⣵⠚⠄⣾⣿⣿⣿⡿⠟⣛⣛⣛⣛⠻⣿⣿⣿⣿⣧⢰⠓⣏⠻⣿⣿⣿⢹⠻⣿⣿⢦⣸⣿⡏⡾⠀⠀⢠⣤⠎⡼⠀⠀⠀⠀⠀⠀",
+    "⠀⠀⠀⠀⠀⠀⠈⠑⠂⠁⠀⠀⣿⠸⣿⢏⢂⣾⠇⠀⣿⣿⣿⡇⡆⠹⢷⣴⣿⡿⠟⠉⣐⡀⠄⣠⡄⡠⣁⡠⠙⠻⢿⣿⣴⡾⠃⢠⢹⣿⣿⢸⠀⢹⣿⣷⢹⣿⢃⡇⠀⠀⠈⠒⠋⠀⠀⠀⠀⠀⠀⠀",
+    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢹⡀⣿⢀⣿⣿⡀⠀⢫⣿⣿⣷⣙⠒⠀⠄⠐⠂⣼⠾⣵⠾⠟⣛⣛⠺⢷⣮⠷⣢⠐⠂⠀⠀⠒⣣⣾⣿⡿⡎⠀⢠⣿⣿⡄⣿⣸⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣟⣿⢸⣿⣿⣷⣄⡈⣾⣿⣿⣿⣿⣿⠻⡷⢺⠃⠠⠁⠈⠋⠀⠀⠉⠁⠙⡀⠘⡗⣾⠿⣿⣿⣿⣿⣿⡿⢀⣴⣿⣿⡿⢃⣯⣽⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⣿⡆⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣵⡞⠀⠁⠐⢁⠎⠄⣠⠀⠀⡄⠀⢳⠈⠆⠈⠈⢳⣯⣿⣿⣿⣿⣿⣿⣿⣿⣿⡏⣸⡷⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣌⠛⢿⣿⣿⣿⣿⣿⣿⠿⠋⣠⣢⠂⠀⢂⠌⠀⠃⠀⠀⠘⠀⢢⡑⠀⠰⣵⡀⠻⢿⣿⣿⣿⣿⣿⣿⡿⠋⣰⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠳⣤⣭⢛⣻⠿⣿⣷⣶⢞⡟⡁⢀⢄⠎⠀⠀⠀⠀⠀⡀⠁⠀⠳⢠⠀⢈⢿⢳⣶⣾⣿⠿⣟⣛⣅⡴⠞⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠙⠛⠻⠿⠿⡟⢜⠔⡠⢊⠔⠀⡆⠀⡆⠀⠀⢡⢰⢠⠀⢢⠱⣌⢂⠃⢿⠿⠿⠟⠛⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⢤⣊⡰⠵⢺⠉⠸⠀⢰⢃⠀⠀⠀⠀⠀⠸⢸⠀⠀⡇⡞⡑⠬⢆⣑⢤⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠁⠀⠀⠀⠘⣾⡸⢀⡜⡾⡀⡇⠀⠀⡴⢠⢻⢦⠀⢃⡿⠀⠀⠀⠀⠈⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠳⡎⠀⠱⡡⠐⠀⠠⠃⢢⠋⠀⢧⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⢤⡀⢀⠔⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠱⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+  },
+  {
+    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⣤⣤⣤⣤⣤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣾⣿⣿⠿⠿⠿⠿⢿⣿⣿⣷⣤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⣿⣿⠟⠋⠀⠀⠀⠀⠀⠀⠀⠙⢿⣿⣿⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣸⣿⣿⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠹⣿⣿⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣴⣶⣾⣿⣿⠀⣿⣿⡏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢹⣿⣿⠀⣿⣿⣷⣶⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⣾⣿⡿⠟⠛⠉⠉⠀⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⠀⠉⠉⠛⠻⢿⣿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣼⣿⡿⠋⠀⠀⠀⠀⠀⠀⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⠀⠀⠀⠀⠀⠀⠙⣿⣿⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⠃⠀⠀⣠⣶⣾⣿⠀⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⠀⣿⣷⣦⣄⠀⠀⠸⣿⣿⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⠀⢀⣾⣿⡿⠛⠉⠀⣿⣿⡇⠀⠀⣀⣀⠀⠀⠀⠀⠀⣀⣀⠀⠀⢸⣿⣿⠀⠉⠛⢿⣿⣷⡀⠀⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣿⣿⣆⢸⣿⣿⠀⠀⠀⠀⣿⣿⡇⠀⢾⣿⣿⡇⠀⠀⠀⢾⣿⣿⡇⠀⢸⣿⣿⠀⠀⠀⠈⣿⣿⡇⣼⣿⣿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⣿⣿⣿⣿⣿⣄⠀⠀⠀⣿⣿⡇⠀⠈⠙⠋⠀⠀⠀⠀⠈⠙⠋⠀⠀⢸⣿⣿⠀⠀⠀⣰⣿⣿⣿⣿⡿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⢿⣿⣿⣿⣷⣶⣶⣿⣿⣿⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣿⣿⣿⣶⣶⣿⣿⣿⣿⡿⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠛⠛⠛⠛⠛⠛⠛⠛⢻⣿⣿⠛⣿⣿⣿⢻⣿⣿⠛⠛⠛⠛⠛⠛⠛⠛⠛⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⣿⣿⣿⣿⣿⣿⠀⢸⣿⣿⠀⣿⣿⣿⢸⣿⣿⠀⠀⣿⣿⣿⣿⣿⣿⣿⣦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⣈⣉⣉⣉⣉⡉⢹⣿⣿⠀⢸⣿⣿⠀⣿⣿⣿⢸⣿⣿⠀⠀⣿⣿⡏⢉⣉⣉⣉⣉⣁⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⣿⣿⣿⣿⣿⣿⣿⣿⡇⢸⣿⣿⠀⢸⣿⣿⠀⣿⣿⣿⢸⣿⣿⠀⠀⣿⣿⡇⢸⣿⣿⣿⣿⣿⣿⣿⣿⣦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⡇⢸⣿⣿⠀⢸⣿⣿⠀⣿⣿⣿⢸⣿⣿⠀⠀⣿⣿⡇⢸⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⡇⢸⣿⣿⠀⢸⣿⣿⠀⣿⣿⣿⢸⣿⣿⠀⠀⣿⣿⡇⢸⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⡇⢸⣿⣿⣄⣼⣿⣿⠀⣿⣿⣿⠸⣿⣿⣆⣠⣿⣿⡇⢸⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣿⣿⣄⠻⢿⣿⣿⠿⢋⣴⣿⣿⣿⣦⡙⠿⣿⣿⡿⠛⣠⣿⣿⡏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢿⣿⣷⣶⣤⣴⣶⣿⣿⠿⠙⢿⣿⣿⣶⣦⣴⣶⣿⣿⡿⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+    "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠛⠻⠿⠿⠛⠋⠁⠀⠀⠀⠈⠙⠛⠿⠿⠛⠛⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+  },
+  {
+    [[      `       --._    `-._   `-.   `.     :   /  .'   .-'   _.-'    _.--'                   ]],
+    [[        `--.__     `--._   `-._  `-.  `. `. : .' .'  .-'  _.-'   _.--'     __.--'           ]],
+    [[           __    `--.__    `--._  `-._ `-. `. :/ .' .-' _.-'  _.--'    __.--'    __         ]],
+    [[            `--..__   `--.__   `--._ `-._`-.`_=_'.-'_.-' _.--'   __.--'   __..--'           ]],
+    [[          --..__   `--..__  `--.__  `--._`-q(-_-)p-'_.--'  __.--'  __..--'   __..--         ]],
+    [[                ``--..__  `--..__ `--.__ `-'_) (_`-' __.--' __..--'  __..--''               ]],
+    [[          ...___        ``--..__ `--..__`--/__/  --'__..--' __..--''        ___...          ]],
+    [[                ```---...___    ``--..__`_(<_   _/)_'__..--''    ___...---'''               ]],
+    [[           ```-----....._____```---...___(____|_/__)___...---'''_____.....-----'''          ]],
+  },
+  {
+    "                                                     ",
+    "  ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗ ",
+    "  ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║ ",
+    "  ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║ ",
+    "  ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║ ",
+    "  ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║ ",
+    "  ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝ ",
+    "                                                     ",
+  },
+  [[
+                               _                         
+                           ,--.\`-. __                   
+                         _,.`. \:/,"  `-._               
+                     ,-*" _,.-;-*`-.+"*._ )              
+                    ( ,."* ,-" / `.  \.  `.              
+                   ,"   ,;"  ,"\../\  \:   \             
+                  (   ,"/   / \.,' :   ))  /             
+                   \  |/   / \.,'  /  // ,'              
+                    \_)\ ,' \.,'  (  / )/                
+                        `  \._,'   `"                    
+                           \../                          
+                           \../                          
+                 ~        ~\../           ~~             
+          ~~          ~~   \../   ~~   ~      ~~         
+     ~~    ~   ~~  __...---\../-...__ ~~~     ~~         
+       ~~~~  ~_,--'        \../      `--.__ ~~    ~~     
+   ~~~  __,--'              `"             `--.__   ~~~  
+~~  ,--'                                         `--.    
+   '------......______             ______......------` ~~
+ ~~~   ~    ~~      ~ `````---"""""  ~~   ~     ~~       
+        ~~~~    ~~  ~~~~       ~~~~~~  ~ ~~   ~~ ~~~  ~  
+     ~~   ~   ~~~     ~~~ ~         ~~       ~~   SSt    
+              ~        ~~       ~~~       ~              
+  ]],
+}, {
+  __index = function(logos, key)
+    if key == "random" then
+      math.randomseed(os.time())
+      return logos[math.random(1, #logos)]
+    end
+    return logos[key]
+  end,
+})
+
+```
 
 ## lsp
+This folder consists of all the configuration for LSP server
+### init
+```lua fold file:init.lua  !tangle:~/.config/nvim/Wizen/plugins/lsp/int.lua
+return {
+  {
+    "neovim/nvim-lspconfig",
+    event = "BufReadPre",
+    dependencies = {
+      { "folke/neoconf.nvim", cmd = "Neoconf", config = true },
+      { "folke/neodev.nvim", config = true },
+      { "j-hui/fidget.nvim", config = true },
+      { "smjonas/inc-rename.nvim", config = true },
+      "williamboman/mason.nvim",
+      "williamboman/mason-lspconfig.nvim",
+      "hrsh7th/cmp-nvim-lsp",
+      {
+        "SmiteshP/nvim-navbuddy",
+        dependencies = {
+          "SmiteshP/nvim-navic",
+          "MunifTanjim/nui.nvim",
+        },
+        opts = { lsp = { auto_attach = true } },
+      },
+      "hrsh7th/cmp-nvim-lsp-signature-help",
+    },
+    opts = {
+      diagnostics = {
+        underline = true,
+        update_in_insert = false,
+        virtual_text = {
+          spacing = 4,
+          source = "if_many",
+          prefix = "icons",
+          -- this will set set the prefix to a function that returns the diagnostics icon based on the severity
+          -- this only works on a recent 0.10.0 build. Will be set to "●" when not supported
+          -- prefix = "icons",
+        },
+        severity_sort = true,
+      },
+      servers = {
+        dockerls = {},
+        gopls = {},
+        vimls = {},
+        yamlls = {},
+        bashls = {},
+        html = {},
+        sqlls = {},
+        taplo = {},
+        marksman = {},
+      },
+      setup = {},
+    },
+    config = function(plugin, opts)
+      require("plugins.lsp.servers").setup(plugin, opts)
+      for name, icon in pairs(require("config.icons").diagnostics) do
+        name = "DiagnosticSign" .. name
+        vim.fn.sign_define(name, { text = icon, texthl = name, numhl = "" })
+      end
+      if type(opts.diagnostics.virtual_text) == "table" and opts.diagnostics.virtual_text.prefix == "icons" then
+        opts.diagnostics.virtual_text.prefix = vim.fn.has "nvim-0.10.0" == 0 and "●"
+          or function(diagnostic)
+            local icons = require("config.icons").diagnostics
+            for d, icon in pairs(icons) do
+              if diagnostic.severity == vim.diagnostic.severity[d:upper()] then
+                return icon
+              end
+            end
+          end
+      end
+      vim.diagnostic.config(vim.deepcopy(opts.diagnostics))
+      local navbuddy = require "nvim-navbuddy"
+      local actions = require "nvim-navbuddy.actions"
+      navbuddy.setup {
+        window = {
+          border = "single", -- "rounded", "double", "solid", "none"
+          -- or an array with eight chars building up the border in a clockwise fashion
+          -- starting with the top-left corner. eg: { "╔", "═" ,"╗", "║", "╝", "═", "╚", "║" }.
+          size = "60%", -- Or table format example: { height = "40%", width = "100%"}
+          position = "50%", -- Or table format example: { row = "100%", col = "0%"}
+          scrolloff = nil, -- scrolloff value within navbuddy window
+          sections = {
+            left = {
+              size = "20%",
+              border = nil, -- You can set border style for each section individually as well.
+            },
+            mid = {
+              size = "40%",
+              border = nil,
+            },
+            right = {
+              -- No size option for right most section. It fills to
+              -- remaining area.
+              border = nil,
+              preview = "leaf", -- Right section can show previews too.
+              -- Options: "leaf", "always" or "never"
+            },
+          },
+        },
+        node_markers = {
+          enabled = true,
+          icons = {
+            leaf = "  ",
+            leaf_selected = " → ",
+            branch = " ",
+          },
+        },
+        icons = {
+          File = "󰈙 ",
+          Module = " ",
+          Namespace = "󰌗 ",
+          Package = " ",
+          Class = "󰌗 ",
+          Method = "󰆧 ",
+          Property = " ",
+          Field = " ",
+          Constructor = " ",
+          Enum = "󰕘",
+          Interface = "󰕘",
+          Function = "󰊕 ",
+          Variable = "󰆧 ",
+          Constant = "󰏿 ",
+          String = " ",
+          Number = "󰎠 ",
+          Boolean = "◩ ",
+          Array = "󰅪 ",
+          Object = "󰅩 ",
+          Key = "󰌋 ",
+          Null = "󰟢 ",
+          EnumMember = " ",
+          Struct = "󰌗 ",
+          Event = " ",
+          Operator = "󰆕 ",
+          TypeParameter = "󰊄 ",
+        },
+        use_default_mappings = true, -- If set to false, only mappings set
+        -- by user are set. Else default
+        -- mappings are used for keys
+        -- that are not set by user
+        mappings = {
+          ["<esc>"] = actions.close(), -- Close and cursor to original location
+          ["q"] = actions.close(),
+
+          ["j"] = actions.next_sibling(), -- down
+          ["k"] = actions.previous_sibling(), -- up
+
+          ["h"] = actions.parent(), -- Move to left panel
+          ["l"] = actions.children(), -- Move to right panel
+          ["0"] = actions.root(), -- Move to first panel
+
+          ["v"] = actions.visual_name(), -- Visual selection of name
+          ["V"] = actions.visual_scope(), -- Visual selection of scope
+
+          ["y"] = actions.yank_name(), -- Yank the name to system clipboard "+
+          ["Y"] = actions.yank_scope(), -- Yank the scope to system clipboard "+
+
+          ["i"] = actions.insert_name(), -- Insert at start of name
+          ["I"] = actions.insert_scope(), -- Insert at start of scope
+
+          ["a"] = actions.append_name(), -- Insert at end of name
+          ["A"] = actions.append_scope(), -- Insert at end of scope
+
+          ["r"] = actions.rename(), -- Rename currently focused symbol
+
+          ["d"] = actions.delete(), -- Delete scope
+
+          ["f"] = actions.fold_create(), -- Create fold of current scope
+          ["F"] = actions.fold_delete(), -- Delete fold of current scope
+
+          ["c"] = actions.comment(), -- Comment out current scope
+
+          ["<enter>"] = actions.select(), -- Goto selected symbol
+          ["o"] = actions.select(),
+
+          ["J"] = actions.move_down(), -- Move focused node down
+          ["K"] = actions.move_up(), -- Move focused node up
+
+          ["t"] = actions.telescope { -- Fuzzy finder at current level.
+            layout_config = { -- All options that can be
+              height = 0.60, -- passed to telescope.nvim's
+              width = 0.60, -- default can be passed here.
+              prompt_position = "top",
+              preview_width = 0.50,
+            },
+            layout_strategy = "horizontal",
+          },
+
+          ["g?"] = actions.help(), -- Open mappings help window
+        },
+        lsp = {
+          auto_attach = false, -- If set to true, you don't need to manually use attach function
+          preference = nil, -- list of lsp server names in order of preference
+        },
+        source_buffer = {
+          follow_node = true, -- Keep the current node in focus on the source buffer
+          highlight = true, -- Highlight the currently focused node
+          reorient = "smart", -- "smart", "top", "mid" or "none"
+          scrolloff = nil, -- scrolloff value when navbuddy is open
+        },
+      }
+    end,
+  },
+  {
+    "williamboman/mason.nvim",
+    cmd = "Mason",
+    keys = { { "<leader>cm", "<cmd>Mason<cr>", desc = "Mason" } },
+    opts = {
+      ensure_installed = {
+        "stylua",
+        "ruff",
+        "rustfmt",
+        "debugpy",
+        "codelldb",
+        "cbfmt",
+        "marksman",
+        "markdownlint",
+      },
+    },
+    config = function(_, opts)
+      require("mason").setup()
+      local mr = require "mason-registry"
+      for _, tool in ipairs(opts.ensure_installed) do
+        local p = mr.get_package(tool)
+        if not p:is_installed() then
+          p:install()
+        end
+      end
+    end,
+  },
+  {
+    "jose-elias-alvarez/null-ls.nvim",
+    event = "BufReadPre",
+    dependencies = { "mason.nvim" },
+    config = function()
+      local nls = require "null-ls"
+      nls.setup {
+        sources = {
+          nls.builtins.formatting.stylua,
+          nls.builtins.diagnostics.ruff.with { extra_args = { "--max-line-length=180" } },
+          nls.builtins.formatting.rustfmt,
+          nls.builtins.formatting.cbfmt,
+          nls.builtins.formatting.markdownlint,
+        },
+      }
+    end,
+  },
+  {
+    "utilyre/barbecue.nvim",
+    event = "VeryLazy",
+    enabled = false,
+    dependencies = {
+      "neovim/nvim-lspconfig",
+      "SmiteshP/nvim-navic",
+      "nvim-tree/nvim-web-devicons",
+    },
+    config = true,
+  },
+  {
+    "nvimdev/lspsaga.nvim",
+    event = "LspAttach",
+    -- enabled = false,
+    config = function()
+      require("lspsaga").setup {
+        definition = {
+          edit = "<C-c>o",
+          vsplit = "<C-c>v",
+          split = "<C-c>i",
+          table = "<C-c>t",
+          quit = "q",
+        },
+        code_action = {
+          num_shortcut = true,
+          show_server_name = false,
+          extend_gitsigns = true,
+          keys = {
+            -- string | table type
+            quit = "q",
+            exec = "<CR>",
+          },
+        },
+        lightbulb = {
+          enable = true,
+          enable_in_insert = true,
+          sign = true,
+          sign_priority = 40,
+          virtual_text = true,
+        },
+        diagnostic = {
+          on_insert = false,
+          on_insert_follow = false,
+          insert_winblend = 0,
+          show_code_action = true,
+          show_source = true,
+          jump_num_shortcut = true,
+          max_width = 0.7,
+          max_height = 0.6,
+          max_show_width = 0.9,
+          max_show_height = 0.6,
+          text_hl_follow = true,
+          border_follow = true,
+          extend_relatedInformation = false,
+          keys = {
+            exec_action = "o",
+            quit = "q",
+            expand_or_jump = "<CR>",
+            quit_in_show = { "q", "<ESC>" },
+          },
+        },
+        hover = {
+          max_width = 0.6,
+          open_link = "gx",
+          open_browser = "!chrome",
+        },
+        rename = {
+          quit = "<C-c>",
+          exec = "<CR>",
+          mark = "x",
+          confirm = "<CR>",
+          in_select = true,
+        },
+        outline = {
+          win_position = "right",
+          win_with = "",
+          win_width = 30,
+          preview_width = 0.4,
+          show_detail = true,
+          auto_preview = true,
+          auto_refresh = true,
+          auto_close = true,
+          auto_resize = false,
+          custom_sort = nil,
+          keys = {
+            expand_or_jump = "o",
+            quit = "q",
+          },
+        },
+        callhierarchy = {
+          show_detail = false,
+          keys = {
+            edit = "e",
+            vsplit = "s",
+            split = "i",
+            table = "t",
+            jump = "o",
+            quit = "q",
+            expand_collapse = "u",
+          },
+        },
+        beacon = {
+          enable = true,
+          frequency = 7,
+        },
+        ui = {
+          -- This option only works in Neovim 0.9
+          title = true,
+          -- Border type can be single, double, rounded, solid, shadow.
+          border = "single",
+          winblend = 0,
+          expand = "",
+          collapse = "",
+          code_action = "💡",
+          incoming = " ",
+          outgoing = " ",
+          hover = " ",
+          kind = {
+            File = { "󰈔 ", "LspKindFile" },
+            Module = { " ", "LspKindModule" },
+            Namespace = { " ", "LspKindNamespace" },
+            Package = { " ", "LspKindPackage" },
+            Class = { " ", "LspKindClass" },
+            Method = { " ", "LspKindMethod" },
+            Property = { " ", "LspKindProperty" },
+            Field = { " ", "LspKindField" },
+            Constructor = { " ", "LspKindConstructor" },
+            Enum = { " ", "LspKindEnum" },
+            Interface = { " ", "LspKindInterface" },
+            Function = { "󰊕 ", "LspKindFunction" },
+            Variable = { " ", "LspKindVariable" },
+            Constant = { " ", "LspKindConstant" },
+            String = { " ", "LspKindString" },
+            Number = { "󰉻 ", "LspKindNumber" },
+            Boolean = { " ", "LspKindBoolean" },
+            Array = { " ", "LspKindArray" },
+            Object = { "󰐾 ", "LspKindObject" },
+            Key = { "󰌋 ", "LspKindKey" },
+            Null = { "󰟢 ", "LspKindNull" },
+            EnumMember = { " ", "LspKindEnumMember" },
+            Struct = { " ", "LspKindStruct" },
+            Event = { " ", "LspKindEvent" },
+            Operator = { " ", "LspKindOperator" },
+            TypeParameter = { " ", "LspKindTypeParameter" },
+            TypeAlias = { " ", "LspKindTypeAlias" },
+            Parameter = { " ", "LspKindParameter" },
+            StaticMethod = { " ", "LspKindStaticMethod" },
+            Macro = { " ", "LspKindMacro" },
+            Text = { " ", "LspKindText" },
+            Snippet = { " ", "LspKindSnippet" },
+            Folder = { " ", "LspKindFolder" },
+            Unit = { " ", "LspKindUnit" },
+            Value = { " ", "LspKindValue" },
+          },
+        },
+      }
+    end,
+    dependencies = {
+      { "nvim-tree/nvim-web-devicons" },
+      --Please make sure you install markdown and markdown_inline parser
+      { "nvim-treesitter/nvim-treesitter" },
+    },
+  },
+}
+```
+### format
+```lua fold file:format.lua  !tangle:~/.config/nvim/Wizen/plugins/lsp/format.lua
+local M = {}
+
+M.autoformat = true
+
+function M.toggle()
+  M.autoformat = not M.autoformat
+  vim.notify(M.autoformat and "Enabled format on save" or "Disabled format on save")
+end
+
+function M.format()
+  local buf = vim.api.nvim_get_current_buf()
+  local ft = vim.bo[buf].filetype
+  local have_nls = #require("null-ls.sources").get_available(ft, "NULL_LS_FORMATTING") > 0
+
+  vim.lsp.buf.format {
+    bufnr = buf,
+    filter = function(client)
+      if have_nls then
+        return client.name == "null-ls"
+      end
+      return client.name ~= "null-ls"
+    end,
+  }
+end
+
+function M.on_attach(client, buf)
+  if client.supports_method "textDocument/formatting" then
+    vim.api.nvim_create_autocmd("BufWritePre", {
+      group = vim.api.nvim_create_augroup("LspFormat." .. buf, {}),
+      buffer = buf,
+      callback = function()
+        if M.autoformat then
+          M.format()
+        end
+      end,
+    })
+  end
+end
+
+return M
+```
+### keymaps
+```lua fold file:keymaps.lua  !tangle:~/.config/nvim/Wizen/plugins/lsp/keymaps.lua
+local M = {}
+
+function M.on_attach(client, buffer)
+  local self = M.new(client, buffer)
+
+  self:map("gd", "Telescope lsp_definitions", { desc = "Goto Definition" })
+  self:map("gr", "Telescope lsp_references", { desc = "References" })
+  self:map("gD", "Telescope lsp_declarations", { desc = "Goto Declaration" })
+  self:map("gI", "Telescope lsp_implementations", { desc = "Goto Implementation" })
+  self:map("gb", "Telescope lsp_type_definitions", { desc = "Goto Type Definition" })
+  self:map("K", vim.lsp.buf.hover, { desc = "Hover" })
+  self:map("gK", vim.lsp.buf.signature_help, { desc = "Signature Help", has = "signatureHelp" })
+  self:map("[d", M.diagnostic_goto(true), { desc = "Next Diagnostic" })
+  self:map("]d", M.diagnostic_goto(false), { desc = "Prev Diagnostic" })
+  self:map("]e", M.diagnostic_goto(true, "ERROR"), { desc = "Next Error" })
+  self:map("[e", M.diagnostic_goto(false, "ERROR"), { desc = "Prev Error" })
+  self:map("]w", M.diagnostic_goto(true, "WARNING"), { desc = "Next Warning" })
+  self:map("[w", M.diagnostic_goto(false, "WARNING"), { desc = "Prev Warning" })
+  self:map("<leader>ca", vim.lsp.buf.code_action, { desc = "Code Action", mode = { "n", "v" }, has = "codeAction" })
+
+  local format = require("plugins.lsp.format").format
+  self:map("<leader>cf", format, { desc = "Format Document", has = "documentFormatting" })
+  self:map("<leader>cf", format, { desc = "Format Range", mode = "v", has = "documentRangeFormatting" })
+  self:map("<leader>cr", M.rename, { expr = true, desc = "Rename", has = "rename" })
+  self:map("<leader>cn", "Navbuddy", { desc = "Navbuddy" })
+  self:map("<leader>cs", require("telescope.builtin").lsp_document_symbols, { desc = "Document Symbols" })
+  self:map("<leader>cS", require("telescope.builtin").lsp_dynamic_workspace_symbols, { desc = "Workspace Symbols" })
+end
+
+function M.new(client, buffer)
+  return setmetatable({ client = client, buffer = buffer }, { __index = M })
+end
+
+function M:has(cap)
+  return self.client.server_capabilities[cap .. "Provider"]
+end
+
+function M:map(lhs, rhs, opts)
+  opts = opts or {}
+  if opts.has and not self:has(opts.has) then
+    return
+  end
+  vim.keymap.set(
+    opts.mode or "n",
+    lhs,
+    type(rhs) == "string" and ("<cmd>%s<cr>"):format(rhs) or rhs,
+    ---@diagnostic disable-next-line: no-unknown
+    { silent = true, buffer = self.buffer, expr = opts.expr, desc = opts.desc }
+  )
+end
+
+function M.rename()
+  if pcall(require, "inc_rename") then
+    return ":IncRename " .. vim.fn.expand "<cword>"
+  else
+    vim.lsp.buf.rename()
+  end
+end
+
+function M.diagnostic_goto(next, severity)
+  local go = next and vim.diagnostic.goto_next or vim.diagnostic.goto_prev
+  severity = severity and vim.diagnostic.severity[severity] or nil
+  return function()
+    go { severity = severity }
+  end
+end
+
+return M
+```
+
+### servers
+```lua fold file:servers.lua  !tangle:~/.config/nvim/Wizen/plugins/lsp/servers.lua
+local M = {}
+
+local lsp_utils = require "plugins.lsp.utils"
+
+function M.setup(_, opts)
+  lsp_utils.on_attach(function(client, buffer)
+    require("plugins.lsp.format").on_attach(client, buffer)
+    require("plugins.lsp.keymaps").on_attach(client, buffer)
+  end)
+
+  local servers = opts.servers
+  require("mason-lspconfig").setup { ensure_installed = vim.tbl_keys(servers) }
+  require("mason-lspconfig").setup_handlers {
+    function(server)
+      local server_opts = servers[server] or {}
+      server_opts.capabilities = lsp_utils.capabilities()
+      if opts.setup[server] then
+        if opts.setup[server](server, server_opts) then
+          return
+        end
+      elseif opts.setup["*"] then
+        if opts.setup["*"](server, server_opts) then
+          return
+        end
+      end
+      require("lspconfig")[server].setup(server_opts)
+    end,
+  }
+end
+
+return M
+```
+
+### utils
+```lua fold file:utils.lua  !tangle:~/.config/nvim/Wizen/plugins/lsp/utils.lua
+local M = {}
+
+local FORMATTING = require("null-ls").methods.FORMATTING
+local DIAGNOSTICS = require("null-ls").methods.DIAGNOSTICS
+local COMPLETION = require("null-ls").methods.COMPLETION
+local CODE_ACTION = require("null-ls").methods.CODE_ACTION
+local HOVER = require("null-ls").methods.HOVER
+
+local function list_registered_providers_names(ft)
+  local s = require "null-ls.sources"
+  local available_sources = s.get_available(ft)
+  local registered = {}
+  for _, source in ipairs(available_sources) do
+    for method in pairs(source.methods) do
+      registered[method] = registered[method] or {}
+      table.insert(registered[method], source.name)
+    end
+  end
+  return registered
+end
+
+function M.list_formatters(ft)
+  local providers = list_registered_providers_names(ft)
+  return providers[FORMATTING] or {}
+end
+
+function M.list_linters(ft)
+  local providers = list_registered_providers_names(ft)
+  return providers[DIAGNOSTICS] or {}
+end
+
+function M.list_completions(ft)
+  local providers = list_registered_providers_names(ft)
+  return providers[COMPLETION] or {}
+end
+
+function M.list_code_actions(ft)
+  local providers = list_registered_providers_names(ft)
+  return providers[CODE_ACTION] or {}
+end
+
+function M.list_hovers(ft)
+  local providers = list_registered_providers_names(ft)
+  return providers[HOVER] or {}
+end
+
+function M.capabilities()
+  local capabilities = vim.lsp.protocol.make_client_capabilities()
+  return require("cmp_nvim_lsp").default_capabilities(capabilities)
+end
+
+function M.on_attach(on_attach)
+  vim.api.nvim_create_autocmd("LspAttach", {
+    callback = function(args)
+      local bufnr = args.buf
+      local client = vim.lsp.get_client_by_id(args.data.client_id)
+      on_attach(client, bufnr)
+    end,
+  })
+end
+
+return M
+```
 
 ## pde
+This folder contains everything related to personal development environment.
 
 ## statusline
 
-## 
+## test
+
+## vcs
+
+## rest of the plugins
