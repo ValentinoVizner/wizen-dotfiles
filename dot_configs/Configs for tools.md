@@ -1,5 +1,5 @@
 For each tool that does not use the default settings, here will be a dedicated header with the configuration file.
-## ZSHRC
+# ZSHRC
 Zshrc config is used in a combination with [Oh My Zsh](https://ohmyz.sh/), but actually starship is used for the theme. Might look into more lightweight alternative to OMZ.
 Following plugins are used:
 	- zsh-syntax-highlighting 
@@ -126,7 +126,7 @@ zvm_after_init_commands+=(eval "$(atuin init zsh)")
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 ```
 
-## Starship
+# Starship
 [starship](https://starship.rs/) is customizable prompt for any shell, written in Rust.
 ```toml fold file:starship.toml  !tangle:~/.config/starship.toml
 format = """
@@ -289,7 +289,7 @@ detect_folders = ["node_modules"]
 
 ```
 
-## Zellij
+# Zellij
 [zellij](https://zellij.dev/) is Terminal multiplexer, alternative to Tmux, written in Rust
 ```kdl fold file:config.kdl  !tangle:~/.config/zellij/config.kdl
 // copy_command: "xclip -selection clipboard" # x11
@@ -756,11 +756,11 @@ ui {
 
 ```
 
-## Wezterm
+# Wezterm
 [wezterm](https://wezfurlong.org/wezterm/) A GPU-accelerated cross-platform terminal emulator and multiplexer, written in Rust.
 For me the selling point is the configuration file that in Lua format, which is handy since Neovim is in Lua mostly nowadays.
 Configuration is split into multiple files for easier maintenance, files are the following:
-### Bar setup
+## Bar setup
 ```lua file:bar.lua  !tangle:~/.config/wezterm/bar.lua
 local wezterm = require("wezterm")
 
@@ -1111,7 +1111,7 @@ end)
 return M
 ```
 
-### Fonts setup
+## Fonts setup
 ```lua file:fonts.lua  !tangle:~/.config/wezterm/fonts.lua
 local wezterm = require("wezterm")
 
@@ -1146,7 +1146,7 @@ end
 
 return F
 ```
-### Keybindings setup
+## Keybindings setup
 ```lua file:keybindings.lua  !tangle:~/.config/wezterm/keybindings.lua
 local wezterm = require("wezterm")
 local act = wezterm.action
@@ -1285,7 +1285,7 @@ return {
 }
 ```
 
-### Theme setup
+## Theme setup
 ```lua file:theme.lua  !tangle:~/.config/wezterm/theme.lua
 local wezterm = require("wezterm")
 
@@ -1314,7 +1314,7 @@ end
 return F
 ```
 
-### Wezterm Setup
+## Wezterm Setup
 ```lua file:wezterm.lua  !tangle:~/.config/wezterm/wezterm.lua
 local wezterm = require("wezterm")
 local theme = require("theme")
@@ -1399,3 +1399,7 @@ end
 
 return opts
 ```
+
+
+
+
