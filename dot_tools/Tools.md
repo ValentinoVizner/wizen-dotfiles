@@ -2,7 +2,7 @@ This document consists of all the tools installed, it will be different installa
 
 ## MacOS
 For MacOS we use brew package manager, and here is the Brewfile
-```shell fold file:Brewfile !tangle Brewfile
+```shell fold file:Brewfile !tangle:Brewfile
 tap "adoptopenjdk/openjdk"
 tap "hidetatz/tap"
 tap "homebrew/bundle"
@@ -114,6 +114,8 @@ brew "ranger"
 brew "redis"
 brew "rename"
 brew "ripgrep"
+brew "rm-improved"
+brew "rnr"
 brew "rust-analyzer"
 brew "rustup-init"
 brew "shellcheck"
@@ -147,7 +149,7 @@ cask "kafka-tool"
 cask "karabiner-elements"
 cask "keycastr"
 cask "mactex"
-cask "wezterm"
+cask "wezterm-nightly"
 ```
 
 ## Windows
