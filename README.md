@@ -8,3 +8,7 @@
 - GCC
 - fd for telescope
 - ripgrep for telescope
+
+```shell 
+
+```
