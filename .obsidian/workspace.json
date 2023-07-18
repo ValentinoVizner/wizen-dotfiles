@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "dot_tools/Tools.md",
+                "file": "dot_configs/Configs for tools.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "dot_tools/Tools.md",
+                "file": "dot_configs/Configs for tools.md",
                 "collapseAll": true,
                 "extraContext": true,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "dot_tools/Tools.md",
+                "file": "dot_configs/Configs for tools.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "dot_tools/Tools.md"
+                "file": "dot_configs/Configs for tools.md"
               }
             }
           }
@@ -150,19 +150,24 @@
   },
   "active": "fb6a66565eb08630",
   "lastOpenFiles": [
-    "dot_configs/Configs for tools.md",
     "dot_tools/Tools.md",
+    "dot_configs/Configs for tools.md",
     "README.md",
+    "nvim/Wizen/Neovim Readme.md",
+    "neovim/Wizen/Wizen - Neovim setup.md",
+    "neovim/Wizen/Neovim Readme.md",
+    "neovim/Wizen",
+    "neovim/Untitled",
+    "neovim",
+    "nvim/Untitled",
     "nvim/Wizen/Wizen - Neovim setup.md",
     "Brewfile",
-    "nvim/Neovim Readme.md",
     "lua/plugins/init.lua.md",
     "lua/plugins",
     "lua",
     "nvim/Wizen/Wizen.md",
     "dot_configs",
     "dot_tools",
-    "nvim/Wizen",
-    "nvim"
+    "nvim/Wizen"
   ]
 }

@@ -1147,7 +1147,7 @@ end
 return F
 ```
 ## Keybindings setup
-```lua file:keybindings.lua  !tangle:~/.config/wezterm/keybindings.lua
+```lua file:keybindings.lua !tangle:~/.config/wezterm/keybindings.lua
 local wezterm = require("wezterm")
 local act = wezterm.action
 
@@ -1263,7 +1263,7 @@ local key_tables = {
 			-- navigate any search mode results
 			{ key = "n", mods = "NONE", action = wezterm.action { CopyMode = "NextMatch" } },
 			{ key = "N", mods = "SHIFT", action = wezterm.action { CopyMode = "PriorMatch" } },
-. },
+},
 
 }
 
