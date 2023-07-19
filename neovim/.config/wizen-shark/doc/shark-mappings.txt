@@ -1,0 +1,400 @@
+*shark-mappings.txt*                                     Shark's Core Mappings
+
+
+           ...                                                    ..      ~
+       .x888888hx    :   .uef^"                             < .z@8"`      ~
+      d88888888888hxx  :d88E                      .u    .    !@88E        ~
+     8" ... `"*8888%`  `888E             u      .d88B :@8c   '888E   u    ~
+    !  "   ` .xnxx.     888E .z8k     us888u.  ="8888f8888r   888E u@8NL  ~
+    X X   .H8888888%:   888E~?888L .@88 "8888"   4888>'88"    888E`"88*"  ~
+    X 'hn8888888*"   >  888E  888E 9888  9888    4888> '      888E .dN.   ~
+    X: `*88888%`     !  888E  888E 9888  9888    4888>        888E~8888   ~
+    '8h.. ``     ..x8>  888E  888E 9888  9888   .d888L .+     888E '888&  ~
+     `88888888888888f   888E  888E 9888  9888   ^"8888*"      888E  9888. ~
+      '%8888888888*"   m888N= 888> "888*""888"     "Y"      '"888*" 4888" ~
+         ^"****""`      `Y"   888   ^Y"   ^Y'                  ""    ""   ~
+                             J88"                                         ~
+                             @%                                           ~
+                           :"                                             ~
+
+
+Author:   Arsham Shirvani <arsham@duck.com>
+Homepage: <https://github.com/arsham/shark>
+License:  MIT license
+
+==============================================================================
+CORE MAPPINGS                          *shark-mappings*  *shark-core-mappings*
+
+In most mappings we are following this theme, unless there is an uncomfortable
+situation or messes with a community-driven or Vim's very well known mapping:
+
+ Part of mapping  Description                                                ~
+ -----------------------------------------------------------------------------
+ q                |Quickfix| list mappings
+ w                |location-list| mappings (because it's near q)
+ ]                Jumps to the next item
+ [                Jumps to the previous item
+ b                Buffer, Block
+ f                File, Find, Function
+ a                All, or disabling certain constraints
+ a                Argument (parameter)
+ i                Indent
+ d                Diff, Diagnostics
+ h                Hunk
+ c                Change, Copilot, Codeium
+ s                Statement, Scope
+ o                Loop
+ e                Element
+ t                Tab
+ z                Folds, language/spelling
+ g                Go/Jump to, run something that goes/jumps to
+ n                Neorg related
+ r                Rest
+
+*shark-mappings-leader*
+The |<Leader>| key is |<Space>|!
+
+Please refer to the following help files for more mappings and textobjects:
+
+- |listish.txt|
+- |fzfmania.txt|
+- |archer.txt|
+- |indent-tools.txt|
+
+                                                                  *<Leader>oo*
+<Leader>oo              Open the Oil buffer
+                                                                  *<Leader>gg*
+<Leader>gg              Fugitive git buffer
+                                                                  *<Leader>gd*
+<Leader>gd              Fugitive git diff
+                                                                    *shark_]c*
+]c                      (gitsigns) Next hunk
+                                                                    *shark_[c*
+[c                      (gitsigns) Previous hunk
+                                                                  *<Leader>gs*
+<Leader>gs              (gitsigns) Toggle Signs
+                                                                  *<Leader>hb*
+<Leader>hb              (gitsigns) Blame line
+                                                                  *<Leader>hs*
+<Leader>hs              (gitsigns) Stage hunk
+                                                                  *<Leader>hl*
+<Leader>hl              (gitsigns) Stage line
+                                                                  *<Leader>hu*
+<Leader>hu              (gitsigns) Unstage hunk
+                                                                  *<Leader>hr*
+<Leader>hr              (gitsigns) Reset hunk
+                                                                  *<Leader>hR*
+<Leader>hR              (gitsigns) Reset buffer
+                                                                  *<Leader>hp*
+<Leader>hp              (gitsigns) Preview hunk
+                                                                    *shark_]f*
+]f                      Go to start of the next function
+                                                                    *shark_[f*
+[f                      Go to start of the previous function
+                                                                          *]F*
+]F                      Go to end of the next function
+                                                                          *[F*
+[F                      Go to end of the previous function
+                                                                          *]b*
+]b                      Go to start of the next block
+                                                                          *[b*
+[b                      Go to start of the previous block
+                                                                          *]B*
+]B                      Go to end of the next block
+                                                                          *[B*
+[B                      Go to end of the previous block
+                                                                         *]gc*
+]gc                     Go to start of the next comment
+                                                                         *[gc*
+[gc                     Go to start of the previous comment
+                                                                          *]a*
+]a                      Go to start of the next parameter
+                                                                          *[a*
+[a                      Go to start of the previous parameter
+                                                                          *]A*
+]A                      Go to end of the next parameter
+                                                                          *[A*
+[A                      Go to end of the previous parameter
+                                                                          *]o*
+]o                      Go to the next loop
+                                                                          *[o*
+[o                      Go to the previous loop
+                                                                    *shark_]s*
+]s                      Go to the next scope
+                                                                    *shark_[s*
+[s                      Go to the previous scope
+                                                                  *<Leader>.f*
+<Leader>.f              Swap around with the next function
+                                                                  *<Leader>,f*
+<Leader>,f              Swap around with the previous function
+                                                                  *<Leader>.e*
+<Leader>.e              Swap with the next element
+                                                                  *<Leader>,e*
+<Leader>,e              Swap with the previous element
+                                                                  *<Leader>.a*
+<Leader>.a              Swap with the next parameter
+                                                                  *<Leader>,a*
+<Leader>,a              Swap with the previous parameter
+                                                                  *<Leader>df*
+<Leader>df              Peek function definition
+                                                               *ALT-j* *<M-j>*
+<Alt-j>                                                    *v_ALT-j* *v_<M-j>*
+{Visual}<Alt-j>         Shift line, [count] line(s)
+                        or {Visual} selection down and format
+                                                               *ALT-k* *<M-k>*
+<Alt-k>                                                    *v_ALT-k* *v_<M-k>*
+{Visual}<Alt-k>         Shift line, [count] line(s)
+                        or {Visual} selection up and format
+                                                                          *g=*
+g=                      Re-indents the hole buffer
+                                                                *shark-<Left>*
+<Left>                  Reduce vertical size
+                                                               *shark-<Right>*
+<Right>                 Increase vertical size
+                                                                  *shark-<Up>*
+<Up>                    Reduce horizontal size
+                                                                *shark-<Down>*
+<Down>                  Increase horizontal size
+                                                                  *<Esc><Esc>*
+<Esc><Esc>              Clear hlsearch
+                                                                   *<Leader>y*
+<Leader>y{motion}
+{Visial}<Leader>y       Yank to the + register
+                                                                   *<Leader>p*
+<Leader>p               Paste from the + register after cursor
+                                                                   *<Leader>P*
+<Leader>P               Paste from the + register before cursor
+                                                                  *<Leader>gw*
+<Leader>gw              Grep current word in buffer.
+                        Populates the locallist
+                                                                  *<Leader>sp*
+<Leader>sp              Toggles Spelling on current buffer
+                                                                  *<Leader>sf*
+<Leader>sf              Auto fixes previous misspelled word
+                                                                  *<Leader>hh*
+<Leader>hh              Opens the help for current word
+                                                            *CTRL-wb* *<C-w>b*
+<Ctrl>wb                                          *CTRL-w_CTRL-b* *<C-w><C-b>*
+<Ctrl>w<Ctrl>b          Delete current buffer
+                                                            *CTRL-wt* *<C-w>t*
+<Ctrl>wt                                          *CTRL-w_CTRL-t* *<C-w><C-t>*
+<Ctrl>w<Ctrl>t          Open current buffer in a new tab
+                                                                   *v_cn* *cn*
+cn {Visual}cn           Initiate a `cgn` on current `word`
+                        or {Visual} selection
+                                                                          *g.*
+g.                      Use last change (anything) as the
+                        initiate a `cgn` on current `word`
+                                                                  *<Leader>zm*
+<Leader>zm              Set folding method to Manual
+                                                                  *<Leader>ze*
+<Leader>ze              Set folding method to Expression
+                                                                  *<Leader>zi*
+<Leader>zi              Set folding method to Indent
+                                                                  *<Leader>zk*
+<Leader>zk              Set folding method to Marker
+                                                                  *<Leader>zs*
+<Leader>zs              Set folding method to Syntax
+                                                           *c_ALT-a* *c_<M-a>*
+<Alt>a                  Go to begging of the line
+                                                           *c_ALT-e* *c_<M-e>*
+<Alt>e                  Go to end of the line
+                                              *c_CTRL-r_CTRL-l* *c_<C-r><C-l>*
+<Ctrl>r<Ctrl>l          Copy current line in the buffer
+                                                                  *<Tab><Tab>*
+<Tab><Tab>              Switch to the alternative buffer
+                                                                  *<Leader>kk*
+<Leader>kk              Toggles file tree
+                                                                  *<Leader>kf*
+<Leader>kf              Finds current file in the file tree
+                                                                         *gso*
+gso{motion}             Sort [count] objects that {motion} moves over
+{Visual}gso             Sort objects over {Visual} selection
+                                                                        *gsoo*
+gsoo                    Sort [count] lines
+                                                  *CTRL-w_CTRL-z* *<C-w><C-z>*
+<Ctrl>w<Ctrl>z          Zoom current window/Unzoom
+                                                         *i_CTRL-l* *s_CTRL-l*
+                                                           *i_<C-l>* *s_<C-l>*
+<Ctrl>l                 Next snippet choice
+                                                         *i_CTRL-h* *s_CTRL-h*
+                                                           *i_<C-h>* *s_<C-h>*
+<Ctrl>h                 Previous snippet choice
+                                                      *shark_gc*, *shark_v_gc*
+gc{motion}
+{Visual}gc              Comment [count] lines or {Visual} selection
+                                                                  *<Leader>nr*
+<Leader>nr              Return from Neorg buffer
+                                                                  *<Leader>nm*
+<Leader>nm              Modify code block with Neorg looking-glass
+                                                                  *<Leader>nh*
+<Leader>nh              Neorg workspace Hme
+                                                                  *<Leader>nw*
+<Leader>nw              Neorg Workspace
+                                                                  *<Leader>nj*
+<Leader>nj              Neorg Journal
+                                                              *shark_NEORG_]]*
+]]                      Neorg buffer next heading
+                                                              *shark_NEORG_[[*
+[[                      Neorg buffer previous heading
+                                                                  *COPILOT_CR*
+<CR>                    Copilot panel: Accept suggestion
+                                                                  *COPILOT_gr*
+gr                      Copilot panel: Refresh
+                                                             *ALT-CR* *<M-CR>*
+<Alt>CR                 Copilot panel: Open
+                                                               *ALT-]* *<M-]>*
+<Alt>]                  Copilot suggestion: Next suggestion
+                                                               *ALT-[* *<M-[>*
+<Alt>[                  Copilot suggestion: Previous suggestion
+                                                  *CTRL-y_CTRL-y* *<C-y><C-y>*
+<Ctrl>y<Ctrl>y          Copilot suggestion: Accept whole suggestion
+                                                  *CTRL-y_CTRL-w* *<C-y><C-w>*
+<Ctrl>y<Ctrl>w          Copilot suggestion: Accept a word of suggestion
+                                                  *CTRL-y_CTRL-l* *<C-y><C-l>*
+<Ctrl>y<Ctrl>l          Copilot suggestion: Accept a line of suggestion
+                                                      *COPILOT_CTRL-]* *<C-]>*
+<Ctrl>]                 Copilot suggestion: Dismiss
+                                                                  *<Leader>ce*
+<Leader>ce              Enable Codeium
+                                                                  *<Leader>cd*
+<Leader>cd              Disable Codeium
+                                                                  *<Leader>or*
+<Leader>or              Run overseer task
+                                                                  *<Leader>ot*
+<Leader>ot              Toggle overseer tasks panel
+                                                                  *<Leader>fl*
+<Leader>fl              Locate files (neess mlocate)
+                                                                  *<Leader>rr*
+<Leader>rr              Run Rest Request under cursor
+                                                                  *<Leader>rp*
+<Leader>rp              Preview Rest Request in cURL command
+                                                                   *<Leader>R*
+<Leader>R               Rreview the last Rest Request
+                                                                   *<Leader>v*
+<Leader>v               Enable/Disable Venn
+                                                                  *<Leader>bd*
+                                                                *v_<Leader>bd*
+{Visual}<Leader>bd      Base64 decode {Visual} selection
+                                                                  *<Leader>be*
+                                                                *v_<Leader>be*
+{Visual}<Leader>be      Base64 encode {Visual} selection
+
+Note that if copilot is enabled, codeium will be disabled.
+
+==============================================================================
+TEXT OBJECTS                               |text-objects| *shark-text-objects*
+
+                                                                        *o_ah*
+o_ah                    Around Hunk (git changes)
+                                                                        *o_ih*
+o_ih                    In Hunk (git changes)
+                                                                        *o_af*
+o_af                    Select around a function
+                                                                        *o_if*
+o_if                    Select inside a function
+                                                                        *o_am*
+o_am                    Select around a method
+                                                                        *o_im*
+o_im                    Select inside a method
+                                                                        *o_ab*
+o_ab                    Select around a block
+                                                                        *o_ib*
+o_ib                    Select inside a block
+                                                                        *o_aa*
+o_aa                    Select around a parameter
+                                                                        *o_ia*
+o_ia                    Select inside a parameter
+                                                                        *o_as*
+o_as                    Select around a statement
+                                                                         *o_H*
+o_H                     To the beginning of line
+                                                                         *o_L*
+o_L                     To the end of line
+                                                                        *o_au*
+o_au                    Select around a unit
+                                                                        *o_iu*
+o_iu                    Select inside a unit
+                                                                        *o_al*
+o_al                    Select around a line
+                                                                        *o_il*
+o_il                    Select inside a line
+
+==============================================================================
+LSP MAPPING                                               *shark-lsp-mappings*
+
+                                                                  *<Leader>dd*
+<Leader>dd              Show line Diagnostics
+                                                                  *<Leader>dq*
+<Leader>dq              Fill the Quicklist with Diagnostics
+                                                                  *<Leader>dw*
+<Leader>dw              Fill the local list with Diagnostics
+                                                                    *shark_]d*
+]d                      Go to next diagnostic issue.
+                        Repeatable with |;| and |,|.
+                                                                    *shark_[d*
+[d                      Go to previous diagnostic issue.
+                        Repeatable with |;| and |,|.
+                                                           *i_ALT-h* *i_<M-h>*
+H i_<Alt-h>             Hover popup
+                                                                    *shark_gd*
+gd                      Go to definition
+                                                 *i_ALT-l* *i_<M-l>* *shark_K*
+K i_<Alt>l              Show signature help
+                                                                  *<Leader>gq*
+<Leader>gq              Format the buffer with LSP
+                                                                  *shark_v_gq*
+v_gq                    Format the selection with LSP
+                                                                    *shark_gq*
+gq{motion}              Format operator with LSP
+                                                                   *<Leader>i*
+<Leader>i               Organise imports
+                                                                  *<Leader>rn*
+<Leader>rn              Incrementally rename symbol
+                                                                    *shark_gr*
+gr                      Go to references
+                                                                  *<Leader>gi*
+<Leader>gi              Go to implementation
+                                                                  *<Leader>ca*
+<Leader>ca              Code actions                            *v_<Leader>ca*
+                                                                  *<Leader>gc*
+<Leader>gc              Show callers and go to one
+                                                                  *<Leader>dr*
+<Leader>dr              Restart LSP server
+                                                                  *<Leader>us*
+<Leader>us              Unlink all open snippet sessions
+
+==============================================================================
+CMP MAPPING                                               *shark-cmp-mappings*
+
+                                                          *i_CTRL-j* *i_<C-j>*
+<C-j>                   Select next item
+                                                          *i_CTRL-k* *i_<C-k>*
+<C-k>                   Select previous item
+                                                          *i_CTRL-b* *i_<C-b>*
+<C-b>                   Scroll documents up
+                                                          *i_CTRL-f* *i_<C-f>*
+<C-f>                   Scroll documents down
+                                                  *i_CTRL-SPACE* *i_<C-Space>*
+<C-Space>               Completion menu (main one)
+                                              *i_CTRL-x_CTRL-o* *i_<C-x><C-o>*
+<C-x><C-o>              Completion menu (lsp)
+                                              *i_CTRL-x_CTRL-s* *i_<C-x><C-s>*
+<C-x><C-s>              Completion menu (luasnip)
+                                              *i_CTRL-x_CTRL-g* *i_<C-x><C-g>*
+<C-x><C-g>              Completion menu (git)
+                                                          *i_CTRL-e* *i_<C-e>*
+                                                          *c_CTRL-e* *c_<C-e>*
+<C-e>                   Abort completion and close
+                                                       *i_TAB* *shark_i_<Tab>*
+                                                             *s_TAB* *s_<Tab>*
+<Tab>                   Next placeholder
+                                                     *i_SHIFT-TAB* *i_<S-Tab>*
+                                                     *s_SHIFT-TAB* *s_<S-Tab>*
+<S-Tab>                 Previous placeholder
+                                                           *i_CTRL-s* *i_C-s>*
+<C-s>                   Completion menu (buffer, rg)
+                                              *i_CTRL-x_CTRL-r* *i_<C-x><C-r>*
+<C-x><X-r>              Completion menu (rg)
+
+vim:tw=78:ts=8:ft=help:norl:

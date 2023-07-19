@@ -1,0 +1,284 @@
+*shark.txt*                                       Fast as a shark Neovim setup
+
+
+
+           ...                                                    ..      ~
+       .x888888hx    :   .uef^"                             < .z@8"`      ~
+      d88888888888hxx  :d88E                      .u    .    !@88E        ~
+     8" ... `"*8888%`  `888E             u      .d88B :@8c   '888E   u    ~
+    !  "   ` .xnxx.     888E .z8k     us888u.  ="8888f8888r   888E u@8NL  ~
+    X X   .H8888888%:   888E~?888L .@88 "8888"   4888>'88"    888E`"88*"  ~
+    X 'hn8888888*"   >  888E  888E 9888  9888    4888> '      888E .dN.   ~
+    X: `*88888%`     !  888E  888E 9888  9888    4888>        888E~8888   ~
+    '8h.. ``     ..x8>  888E  888E 9888  9888   .d888L .+     888E '888&  ~
+     `88888888888888f   888E  888E 9888  9888   ^"8888*"      888E  9888. ~
+      '%8888888888*"   m888N= 888> "888*""888"     "Y"      '"888*" 4888" ~
+         ^"****""`      `Y"   888   ^Y"   ^Y'                  ""    ""   ~
+                             J88"                                         ~
+                             @%                                           ~
+                           :"                                             ~
+
+
+Author:   Arsham Shirvani <arsham@duck.com>
+Homepage: <https://github.com/arsham/shark>
+License:  MIT license
+
+==============================================================================
+CONTENTS                                                      *shark-contents*
+
+1. Introduction ......................................... |shark-introduction|
+2. PLUGINS ................................................... |shark-plugins|
+3. Highlights ............................................. |shark-highlights|
+4. Setup ....................................................... |shark-setup|
+5. Functionality ....................................... |shark-functionality|
+   - Core Mappings ..................................... |shark-core-mappings|
+   - Text Objects ....................................... |shark-text-objects|
+   - Lists ..................................................... |shark-lists|
+   - Fzf ......................................................... |shark-fzf|
+   - LSP ......................................................... |shark-lsp|
+   - Highlight Matching ........................... |shark-highlight-matching|
+   - Commands ............................................... |shark-commands|
+   - Utilities ............................................. |shark-utilities|
+     - Normal ................................................. |shark-normal|
+     - Highlight ........................................... |shark-highlight|
+     - Call and Centre ............................... |shark-call_and_centre|
+6. LICENSE ................................................... |shark-license|
+
+==============================================================================
+INTRODUCTION                                              *shark-introduction*
+
+The goal of this project is to have a fast Neovim startup, provide mappings
+that can be easily memorised, interact with the Lua API, and make programming
+fun.
+
+This project supports Neovim version `0.10.0` and newer.
+
+==============================================================================
+HIGHLIGHTS                                                  *shark-highlights*
+
+* Besides in a few places that Neovim doesn't provide an API in Lua, most
+  configuration is done in Lua.
+* LSP, Treesitter, and FZF are setup to work together.
+* Seamless navigation with tmux.
+* Completion with nvim-cmp plugin is setup.
+* It is optimised to handle very large files.
+* There are some handy textobjects such as backticks and indents.
+* You can add the current location of the cursor or make notes on the current
+  location in the quickfix/local lists with repeatable mappings.
+* You can manipulate quickfix/local lists.
+* It comes with integration with git and gist.
+* Has a lot of useful feedback in the gutter.
+* Statusline is configures with feline.
+* It is set to give a lot of useful information about the buffer.
+* Prettier quickfix buffer and quickfix tools.
+* The theme is setup with Lua to take advantage of its performance.
+
+==============================================================================
+SETUP                                                            *shark-setup*
+
+Just clone this project:
+>bash
+  git clone https://github.com/arsham/shark.git ~/.config/nvim
+<
+
+Once you start 'Neovim', it will install the package manager and installs the
+listed plugins.
+
+==============================================================================
+FUNCTIONALITY                                            *shark-functionality*
+
+Some default `mappings`/`commands` are augmented to centre the buffer after
+the execution.
+
+Most of mappings that are enabled an in use are not documented here. You
+should be able to find them by searching the help of the installed plugins.
+
+I would recommend you have a look at the code to see what is available to you.
+
+==============================================================================
+LISTS                                                            *shark-lists*
+
+Additional to nvim-bqf <https://github.com/kevinhwang91/nvim-bqf> bindings,
+you can do `<count>dd` in the quickfix/local list buffers to delete '<count>'
+rows from quickfix/local list buffer.
+
+Please refer to the |listish.txt| documentation for all commands and mappings.
+
+==============================================================================
+FZF                                                                *shark-fzf*
+
+Please refer to the |fzfmania.txt| documentation for all commands/mappings.
+
+==============================================================================
+LSP                                                                *shark-lsp*
+
+When a |LSP| server is attached to a buffer, a series of mappings will be
+defined for that buffer based on the server's capabilities. When possible, fzf
+will take over the results of the |LSP| mappings results.
+
+See |shark-lsp-mappings| for the defined LSP mappings, and
+[shark-cmp-mappings] for CMP mappings.
+
+|LSP| defines its own set of commands, however I have added a few interesting
+additions.
+
+                                                                 *:CodeAction*
+:CodeAction             Also works on a visually selected text.
+                                                        *:Diagnostics* *:Diag*
+:Diag
+:Diagnostics            Show diagnostics for current buffer
+                                                  *:DiagnosticsAll* *:DiagAll*
+:Diagnostics
+:DiagnosticsAll         Show diagnostics for workspace
+                                                         *:DiagnosticsDisable*
+:DiagnosticsDisable     Disable diagnostics on current buffer
+                                                          *:DiagnosticsEnable*
+:DiagnosticsEnable      Enable diagnostics on current buffer
+                                                           *:WorkspaceSymbols*
+:WorkspaceSymbols       List workspace symbols
+                                                             *:DocumentSymbol*
+:DocumentSymbol         List buffer symbols
+                                                             *:Implementation*
+:Implementation         Go to implementation
+                                                             *:TypeDefinition*
+:TypeDefinition         Go to type definition
+                                                            *:CodeLensRefresh*
+:CodeLensRefresh        Refresh code lenses
+                                                                *:CodeLensRun*
+:CodeLensRun            Run code lenses
+                                                                    *:Callers*
+:Callers                Show callers and go to one
+                                                                    *:Callees*
+:Callees                Show callees and go to one
+                                                                 *:RestartLsp*
+:RestartLsp             Restarts the LSP server
+                                                             *:UnlinkSnippets*
+:UnlinkSnippets         Unlink all open snippet sessions
+                                                              *:ListWorkspace*
+:ListWorkspace          List attached LSP workspace folders
+
+The |:RestartLsp| fixes an issue when the `:LspRestart` defined in
+|lspconfig-commands| does not have any effects.
+
+==============================================================================
+HIGHLIGHT MATCHING                                  *shark-highlight-matching*
+
+Please refer to the |matchmaker.txt| documentation for all the mappings.
+
+==============================================================================
+COMMANDS                                           *commands* *shark-commands*
+
+The following list of commands do not fit into any specific categories.
+
+                                                                   *:Filename*
+:Filename               View the filename
+                                                               *:YankFilename*
+:YankFilename           Yank the filename to '"' register
+                                                              *:YankFilenameC*
+:YankFilenameC          Yank the filename to '+' register
+                                                               *:YankFilepath*
+:YankFilepath           Yank the file path to '"' register
+                                                              *:YankFilepathC*
+:YankFilepathC          Yank the file path to '+' register
+                                                                     *:Nowrap*
+:Nowrap                 Stop wrapping current buffer
+                                                      *:ToggleRelativeNumbers*
+:ToggleRelativeNumbers  Start/Stop relative number switching
+                                                      *:ToggleTrimWhitespaces*
+:ToggleTrimWhitespaces  Toggles trimming whitespaces on buffer
+                                                                    *:Scratch*
+:Scratch                Create a scratch buffer
+                                                                       *:Duck*
+:{range}Duck [args]     Show some ducks
+                        Give an icon for something else
+                                                                       *:Cook*
+:{range}Cook            Cook some ducks
+                                                               *:FoldComments*
+:FoldComments           Fold comments (sets folding to expr)
+                                                                 *:EditConfig*
+:EditConfig             Edit configuration files in a new tab
+                                                                    *:LspCaps*
+:LspCaps                Show short LSP capabilities
+                                                                *:LspCapsFull*
+:LspCapsFull            Show sull LSP capabilities
+                                                                  *:GoModTidy*
+:GoModTidy              Run go mod tidy on go and mod files
+                                                                       *:Tmux*
+:Tmux                   Start a tmux project (using tmuxp)
+                                                                *:LazyLoadAll*
+:LazyLoadAll            Load all lazy-loaded plugins
+                                                                         *:CC*
+:CC                     Close all floating windows
+                                                                    *:ChatGPT*
+:ChatGPT                Open interactive window
+                                                               *:ChatGPTActAs*
+:ChatGPTActAs           Suggest an actor
+
+==============================================================================
+UTILITIES                                                    *shark-utilities*
+
+These are commands you can use in Lua land. Assign the required module to a
+variable and re-use.
+>lua
+  local quick = require("arshlib.quick")
+<
+
+------------------------------------------------------------------------------
+NORMAL                                                          *shark-normal*
+
+Executes a normal command. For example:
+>lua
+  quick.normal("n", "y2k")
+<
+
+See |:h feedkeys()| for values of the mode.
+
+------------------------------------------------------------------------------
+HIGHLIGHT                                                    *shark-highlight*
+
+Create `highlight` groups:
+>lua
+  quick.highlight("LspReferenceRead", {
+    ctermbg = 180,
+    guibg = "#43464F",
+    style = "bold",
+  })
+<
+
+------------------------------------------------------------------------------
+CALL AND CENTRE                                        *shark-call_and_centre*
+
+These functions will call your function/command and then centres the buffer:
+>lua
+  quick.call_and_centre(function()
+    print("Yolo!")
+  end)
+  quick.cmd_and_centre("SomeCommand")
+<
+
+==============================================================================
+LICENSE                                                        *shark-license*
+
+MIT License                                                                  ~
+                                                                             ~
+Copyright (c) 2023 Arsham Shirvani                                           ~
+                                                                             ~
+Permission is hereby granted, free of charge, to any person obtaining a copy ~
+of this software and associated documentation files (the "Software"), to deal~
+in the Software without restriction, including without limitation the rights ~
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell    ~
+copies of the Software, and to permit persons to whom the Software is        ~
+furnished to do so, subject to the following conditions:                     ~
+                                                                             ~
+The above copyright notice and this permission notice shall be included in   ~
+all copies or substantial portions of the Software.                          ~
+                                                                             ~
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR   ~
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,     ~
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE  ~
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER       ~
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,~
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE~
+SOFTWARE.                                                                    ~
+
+vim:tw=78:ft=help

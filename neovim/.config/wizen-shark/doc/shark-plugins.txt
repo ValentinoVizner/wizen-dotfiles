@@ -1,0 +1,131 @@
+*shark-plugins.txt*                                   Shark's Added Plugins
+
+
+           ...                                                    ..      ~
+       .x888888hx    :   .uef^"                             < .z@8"`      ~
+      d88888888888hxx  :d88E                      .u    .    !@88E        ~
+     8" ... `"*8888%`  `888E             u      .d88B :@8c   '888E   u    ~
+    !  "   ` .xnxx.     888E .z8k     us888u.  ="8888f8888r   888E u@8NL  ~
+    X X   .H8888888%:   888E~?888L .@88 "8888"   4888>'88"    888E`"88*"  ~
+    X 'hn8888888*"   >  888E  888E 9888  9888    4888> '      888E .dN.   ~
+    X: `*88888%`     !  888E  888E 9888  9888    4888>        888E~8888   ~
+    '8h.. ``     ..x8>  888E  888E 9888  9888   .d888L .+     888E '888&  ~
+     `88888888888888f   888E  888E 9888  9888   ^"8888*"      888E  9888. ~
+      '%8888888888*"   m888N= 888> "888*""888"     "Y"      '"888*" 4888" ~
+         ^"****""`      `Y"   888   ^Y"   ^Y'                  ""    ""   ~
+                             J88"                                         ~
+                             @%                                           ~
+                           :"                                             ~
+
+
+Author:   Arsham Shirvani <arsham@duck.com>
+Homepage: <https://github.com/arsham/shark>
+License:  MIT license
+
+==============================================================================
+PLUGINS                                                        *shark-plugins*
+
+Function   Plugin                      Description                     License
+------------------------------------------------------------------------------
+🔥 Core    folke/lazy.nvim             Package manager              Apache-2.0
+🔥 Visual  arsham/arshamiser.nvim      Status line                         MIT
+                                       Colour scheme and folds
+🔥 Lists    arsham/listish.nvim        Supporting lists                    MIT
+🧰 Lib      arsham/arshlib.nvim        Common library                      MIT
+⚡ Visual   nvim-tree/nvim-web-devicons                                    MIT
+🔍 Finder   junegunn/fzf               Fuzzy finder                        MIT
+🔍 Finder   junegunn/fzf.vim           fzf plugin for vim                  MIT
+🔥 Finder   arsham/fzfmania.nvim       FZF setup in lua                    MIT
+🔥 Finder   ibhagwan/fzf-lua           FZF ❤️  lua                          MIT
+🧰 Core     nvim-lua/plenary.nvim                                     AGPR-3.0
+⏩ Core     tweekmonster/startuptime.vim Benchmarking startup              MIT
+🔁 Core     tpope/vim-repeat           Add repeat support to other plugins N/A
+🥇 Textobj  arsham/archer.nvim         Advanced mappings and text objects  MIT
+🧰 Visuals  MunifTanjim/nui.nvim       UI component                        MIT
+🥇 Textobj  arsham/indent-tools.nvim   Indent mappings and text object     MIT
+🔥 Visuals  arsham/matchmaker.nvim     Creates highlight for user matches  MIT
+🛢️ Tool     stevearc/oil.nvim          File explorer                       MIT
+ GIT       tpope/vim-fugitive         git integration                     N/A
+ GIT       tpope/vim-rhubarb          Go to selection's code Github page  MIT
+ Core      tpope/vim-git              git integration                     N/A
+🌲 Visuals  nvim-treesitter            Highlighting engine          Apache-2.0
+🔥 GIT      lewis6991/gitsigns.nvim    git signs in the gutter             MIT
+🥇 Textobj  nvim-treesitter-textobjects Treesitter text objects     Apache-2.0
+🔥 Visuals  freddiehaddad/feline.nvim  Statusline (default)            GPL-3.0
+🗨️ Visuals  rcarriga/nvim-notify       Better notification UI              MIT
+🌈 Visuals  nvimtreesitter-refactor    Treesitter plugin            Apache-2.0
+🗒️ Visuals  nvim-treesitter/playground Treesitter plugin            Apache-2.0
+󰐣 Editing   nvim-ts-context-commentstring                                  MIT
+🥊 Core     andymass/vim-matchup                                           MIT
+󰘜 Editing   monaqa/dial.nvim           Enhanced inc/dec values             MIT
+👗 Visuals  stevearc/dressing.nvim                                         MIT
+ GIT       mattn/vim-gist             gist integration                    N/A
+󰛡 Core      RaafatTurki/hex.nvim       Hex viewer                          MIT
+ Tool      iamcco/markdown-preview.nvim                                   MIT
+🧭 Core     numToStr/Navigator.nvim    Seamless navigation with tmux       MIT
+📁 Tool     nvim-neo-tree/neo-tree.nvim File explorer tree                 MIT
+🪟 Core     s1n7ax/nvim-window-picker  Window picker                       MIT
+ Tool      ralismark/opsort.vim       Sort operator                       MIT
+ Tool      sQVe/sort.nvim             Line-wise and delimiter sorting     MIT
+🔭 Tool     dhruvasagar/vim-zoom       Zoom windows                        MIT
+🥇 Textobj  David-Kunz/treesitter-unit Treesitter units              Unlicense
+ LSP       neovim/nvim-lspconfig      LSP configuration            Apache-2.0
+ LSP       mason.nvim                 Package manager: LSP, DAP.   Apache-2.0
+ LSP       mason-lspconfig.nvim       LSP config <-> mason.nvim    Apache-2.0
+ LSP       hrsh7th/nvim-cmp           Completion with LSP                 MIT
+ LSP       saadparwaiz1/cmp_luasnip   Extension for nvim-cmp        Apache2.0
+ LSP       L3MON4D3/LuaSnip           Snippet engine                Apache2.0
+ LSP       hrsh7th/cmp-cmdline        Extension for nvim-cmp              N/A
+ LSP       friendly-snippets                                              MIT
+ LSP       hrsh7th/cmp-buffer         Extension for nvim-cmp              MIT
+ LSP       hrsh7th/cmp-calc           Extension for nvim-cmp              N/A
+ LSP       hrsh7th/cmp-nvim-lsp       Extension for nvim-cmp              MIT
+ LSP       hrsh7th/lsp-signature-help Extension for nvim-cmp              N/A
+ LSP       hrsh7th/cmp-nvim-lua       Extension for nvim-cmp              N/A
+ LSP       hrsh7th/cmp-path           Extension for nvim-cmp              MIT
+ LSP       lukas-reineke/cmp-rg       Extension for nvim-cmp              MIT
+💡 LSP      j-hui/fidget.nvim          Spinner for LSP status              MIT
+📢 LSP      null-ls.nvim               External Tool to LSP bridge         N/A
+📢 LSP      mason-null-ls.nvim         Null LS and Mason bridge       AGPL-3.0
+📢 LSP      mason-tool-installer       LSP server installer                MIT
+🗒️ Editing  numToStr/Comment.nvim      Comment string                      MIT
+🗒️ LSP      smjonas/inc-rename.nvim    Incremental renaming                MIT
+🗒️ Editing  windwp/nvim-autopairs                                          MIT
+ Editing   arthurxavierx/vim-caser    Case conversion                     N/A
+🖌️ Visuals  NvChad/nvim-colorizer.lua  Colourise matched colours in buffer N/A
+🦀 Tools    saecki/crates.nvim         Crate.toml helper                   MIT
+💡 LSP      kosayoda/nvim-lightbulb    Code actions buln                   MIT
+ Editing   gbprod/substitute.nvim     Text exchange operator            WTFPL
+💡 LSP      lsp_lines.nvim             Show LSP diagnostics in extmarks    ISC
+👈 Core     milisims/nvim-luaref                                           MIT
+🗒️ Editing  echasnovski/mini.nvim      For surround, alignments, etc.      MIT
+ Core      folke/neodev.nvim                                       Apache-2.0
+📆 Tool     nvim-neorg/neorg           Note taking tool                GPL-3.0
+ Lists     kevinhwang91/nvim-bqf      Better quickfix list manager      BSD-3
+ Tool      bfredl/nvim-luadev         REPL/debug console for lua plugins  MIT
+💡 LSP      SmiteshP/nvim-navic        LSP current code context     Apache-2.0
+ Tool      kiran94/s3edit.nvim        Edit files on S3 bucket             MIT
+🔍 Tool     woosaaahh/sj.nvim          Search and quickly jump             MIT
+ Editing   mbbill/undotree            Undo tree browser                   MIT
+ GIT       rbong/vim-flog             git log graph                       N/A
+🎡 Visual   towolf/vim-helm            Helm syntax highlighting            N/A
+ Core      tmux-plugins/vim-tmux                                          MIT
+ Editing   mg979/vim-visual-multi     Multiple cursors                    N/A
+🔫 Core     svban/YankAssassin.vim     Stay where you are after yanking    N/A
+ Editing   zbirenbaum/copilot.lua     Copilot                             MIT
+ Editing   Exafunction/codeium.vim    Codeium (opensource copilot)        MIT
+💡 LSP      utilyre/barbecue.nvim      Complementary to navic              MIT
+ LSP       uga-rosa/cmp-dynamic       Extension for nvim-cmp              MIT
+ Tool      stevearc/overseer.nvim     Task runner                         MIT
+🌈 Tool     ziontee113/color-picker    Colour picker and updater           MIT
+ Editing   aduros/ai.vim              OpenAI plugin                       ISC
+ Tool      tamton-aquib/duck.nvim     Fun little ducks                    MIT
+🕸️ Tool     rest-nvim/rest.nvim        Fast http client in lua             MIT
+🔍 Tool     arsham/yanker.nvim         Yank history helper                 MIT
+🗒️ Editing  jbyuki/venn.nvim           Draw ASCII diagrams                 MIT
+ Editing   jackMort/ChatGPT.nvim      ChatGPT                      Apache-2.0
+🔍 Finder   telescope.nvim             Fuzzy finder/picker                 MIT
+
+Note that if copilot is enabled, codeium will be disabled.
+
+vim:tw=78:ft=help
