@@ -4,19 +4,15 @@
     "type": "split",
     "children": [
       {
-        "id": "5c71e00bb00adb39",
+        "id": "cdcd4163ebd4116c",
         "type": "tabs",
         "children": [
           {
-            "id": "fb6a66565eb08630",
+            "id": "190f8d1145537371",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "dot_tools/Tools.md",
-                "mode": "source",
-                "source": false
-              }
+              "type": "empty",
+              "state": {}
             }
           }
         ]
@@ -148,7 +144,7 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "fb6a66565eb08630",
+  "active": "8d6ffaa7494d49ae",
   "lastOpenFiles": [
     "dot_configs/Configs for tools.md",
     "dot_tools/Tools.md",
